@@ -325,12 +325,10 @@
    \hspace{0.1cm}\hbox{}
   \end{flushright}
 
-  \vspace{1em}
+  \vspace{2.5em}
   \begin{center} 
-  \includegraphics[width=0.5\textwidth]{figures/koopmans_white_on_transparent.png}
-
-  \vspace{-0.5em}
-  \textbf{an open-source package for accurately predicting spectral properties}
+  \LARGE
+  \textbf{Accurate charged and neutral excitations \\ with Koopmans functionals}
   \end{center}
   \end{minipage}
   \end{tcolorbox}
@@ -338,7 +336,7 @@
   \vspace{-2em}
   \begin{tcolorbox}[width=\paperwidth, enhanced, colback=kgrey, grow to left by=0.035\paperwidth,]
   \begin{center}
-  \footnotesize \bf \insertauthor\quad | \quad\insertshortinstitute\quad |\quad \insertdate    
+  \footnotesize \bf \insertauthor\quad | \quad\insertshortinstitute\quad | \quad9th TDDFT Workshop, Benasque\quad|\quad \insertdate    
   \end{center}
   %  \end{flushright}
   \end{tcolorbox}
@@ -356,8 +354,8 @@
 % \title[Beamer Intro]{\noindent Strongly correlated biological systems\\\Large DFT and beyond}
 \title{\noindent\large{an open-source package for accurately predicting spectral properties}}
 \author{Edward Linscott}
-\institute{Theory and Simulation of Materials, EPFL}
-\date{DFT2022, Brussels, 1 Sep 2022}
+\institute{EPFL}
+\date{25 Oct 2022}
 \begin{document}
 
 \frame{\titlepage}
@@ -420,7 +418,7 @@
 \begin{frame}{Koopmans functionals: theory}
    \hbox{
       \begin{minipage}{0.5\textwidth}
-         Goal: spectral properties with a functional theory
+         Goal: spectral properties (charged excitations) with a functional theory
 
          \onslide<2->{
             Core idea: for every orbital $i$ their energy
@@ -540,6 +538,18 @@
 %       corrective parameters are...              & $\{U^I\}$, defined with respect to charge-neutral excitations (if using LR) & \leavevmode\onslide<3->{$\{\alpha_i\}$, defined with respect to charged excitations}                                                                                \\
 %    \end{tabularx}
 % \end{frame}
+
+\begin{frame}{Koopmans functionals: theory}
+   Resonance with other efforts:
+   \begin{itemize}
+      \item Wannier transition-state method of Anisimov and Kozhevnikov \cite{Anisimov2005}
+      \item Ensemble DFT of Kronik and co-workers \cite{Kraisler2013}
+      \item Koopmans-Wannier of Wang and co-workers \cite{Ma2016}
+      \item Dielectric-dependent hybrid functionals of Galli and co-workers \cite{Skone2016}
+      \item LOSC functionals of Yang and co-workers \cite{Li2018}
+      \item Optimally tuned hybrid functionals of Kronik, Pasquarello, and others \cite{Wing2021}
+   \end{itemize}
+\end{frame}
 
 \begin{frame}{Koopmans functionals: results for molecules}
    \small
