@@ -1,0 +1,993 @@
+\documentclass[xcolor=table,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usepackage{adjustbox}
+%\usetheme{metropolis}
+\usepackage[style=numeric, sorting=none, sortcites=true, maxnames=1, giveninits=true, autocite=superscript, doi=false, url=false, isbn=false, backend=biber, style=verbose-note, citetracker=false, pagetracker=false, bibencoding=utf8]{biblatex}
+% \usepackage[backend=bibtex,style=authoryear-comp,citestyle=authoryear-comp,firstinits=true,sorting=none,maxnames=1,doi=false,isbn=false,url=false,eprint=false]{biblatex}
+\usepackage[T1]{fontenc}
+\usepackage{siunitx}
+
+\definecolor{twitter_blue}{HTML}{1da1f2}
+\input{seaborn_colours.tex}
+
+% Gobbling first names
+
+\AtEveryCitekey{%
+   \clearfield{shorttitle}%
+   \clearfield{month}%
+   \ifentrytype{article}{%
+      \clearfield{title}%
+   }{}
+   }
+
+% "blindfootcite" is the equivalent of "footcite" except the number marker does not appear
+\newcommand\blfootcite[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{\hspace{-4ex}\cite{#1}}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+\renewcommand*{\multicitedelim}{\textcolor{seaborn_bg_grey_darker}{\addsemicolon}}
+\setbeamerfont{footnote}{size=\scriptsize}
+\renewcommand\footnoterule{\kern-3pt \color{seaborn_bg_grey_darker}\hrule width \textwidth height 0.4pt \color{black} \kern 2.6pt}
+
+\DeclareSourcemap{
+  \maps[datatype=bibtex,overwrite=False]{
+   \map{
+     \step[fieldsource=journal,
+           match={Journal of Chemical Theory and Computation},
+           replace={JCTC}]
+     \step[fieldsource=journal,
+           match={Reviews of Modern Physics},
+           replace={Rev. Mod. Phys.}]
+     \step[fieldsource=journal,
+           match={Reports on Progress in Physics},
+           replace={Rep. Prog. Phys.}]
+     \step[fieldsource=journal,
+           match={Physical Review Letters},
+           replace={Phys. Rev. Lett.}]
+     \step[fieldsource=journal,
+           match={Physical Review},
+           replace={Phys. Rev.}]
+     \step[fieldsource=journal,
+           match={B - Condensed Matter and Materials Physics},
+           replace={B}]
+     \step[fieldsource=journal,
+           match={Journal of Chemical Physics},
+           replace={J. Chem. Phys.}]
+     \step[fieldsource=journal,
+           match={Annual Review of Materials Research},
+           replace={Annu. Rev. Mater. Res.}]
+   }
+  }
+}
+
+\renewbibmacro{in:}{}
+\DeclareFieldFormat{pages}{\mkfirstpage{#1}}
+\beamertemplatenavigationsymbolsempty
+\bibliography{/home/elinscott/Dropbox/zotero_library.bib}
+\setbeamertemplate{bibliography item}[text]
+\renewbibmacro{in:}{}
+\AtEveryBibitem{\clearfield{title}}
+\AtEveryBibitem{\clearfield{month}}
+\AtEveryBibitem{\clearfield{pages}}
+\DeclareNameAlias{default}{given-family}
+
+% \renewcommand*{\bibfont}{\tiny}
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{psfrag}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{amsmath}
+\usepackage{multimedia}
+\usepackage{subcaption}
+%\usepackage{style}
+\usepackage{verbatim}
+\usepackage{multicol}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows,backgrounds,fit,calc,external,trees}
+% \tikzexternalize[prefix=tikzfigures/]
+\tikzstyle{dummy} = []
+\tikzstyle{line} = [draw, thick, -latex']
+\tikzstyle{headless_line} = [draw, thick, -]
+\tikzstyle{default}    = [rectangle, text centered, rounded corners, text=black, font=\sffamily\footnotesize, align=center]
+\tikzstyle{default_text}    = [rectangle, text width=10cm, text=black,anchor=north west, font=\sffamily]
+\tikzstyle{boxwhite} = [default, fill=white, rounded corners=0.1cm]
+\tikzstyle{cp}    = [default, fill=seaborn_blue, text=white, text width=2.8cm, minimum height=0.5cm]
+\tikzstyle{pw}    = [cp, fill=seaborn_green]
+\tikzstyle{wannier90}    = [cp, fill=seaborn_cyan]
+\tikzstyle{bespoke}    = [cp, fill=seaborn_magenta]
+\tikzstyle{observable}    = [cp, fill=seaborn_red]
+\tikzset{
+  -|-/.style={
+    to path={
+      (\tikztostart) -| ($(\tikztostart)!#1!(\tikztotarget)$) |- (\tikztotarget)
+      \tikztonodes
+    }
+  },
+  -|-/.default=0.5,
+  |-|/.style={
+    to path={
+      (\tikztostart) |- ($(\tikztostart)!#1!(\tikztotarget)$) -| (\tikztotarget)
+      \tikztonodes
+    }
+  },
+  |-|/.default=0.5,
+}
+
+\newlength{\myyshift}
+\setlength{\myyshift}{0.05cm}
+
+\usepackage{lipsum}
+\usetikzlibrary{calc}
+\newlength{\myfigscale}
+\setlength{\myfigscale}{0.3cm}
+\usepackage{smartdiagram}
+\usesmartdiagramlibrary{additions}
+\usepackage{multicol}
+\usepackage{helvet}
+\usepackage{sansmath}
+\sansmath
+\usepackage{chronology}
+\usepackage[normalem]{ulem} % for sout (strike out)
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,hooks}
+\tcbset{colframe=structure,fonttitle=\bfseries,beamer, clip upper, boxsep=0pt, sharp corners=all, no shadow, left skip=0pt, right skip=0pt, coltext=white}
+
+% For electron orbital diagrams
+\usepackage{tikzorbital}
+% Changing defaults
+\pgfkeys{tikzorbital/drawLevel/width = 0.666666}
+\pgfkeys{tikzorbital/drawLevel/style = {line width = 1pt, color = black!80, line cap = round}}
+\pgfkeys{tikzorbital/drawLevel/spinlength = 0.666666}
+\pgfkeys{tikzorbital/drawLevel/spinstyle = {very thick, color = black!80, -stealth}}
+
+\input{seaborn_colours.tex}
+
+% For tikz diagrams with nodes appearing on each slide
+\tikzset{
+  invisible/.style={opacity=0},
+  visible on/.style={alt={#1{}{invisible}}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+
+\usepackage{array}
+\usepackage{multirow}
+% \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+% For checklist
+%\usepackage{enumitem}
+%\newlist{todolist}{itemize}{2}
+%\setlist[todolist]{label=$\square$}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+\hspace{-2.5pt}}
+\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
+
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\braopket}[3]{\langle #1|#2|#3\rangle}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\nline}{\nonumber \\}
+\newcommand{\Trace}{\mathrm{Tr}}
+
+\renewcommand{\ttdefault}{pcr} % enables bold fixed width font
+\numberwithin{equation}{section}
+% \usefonttheme{professionalfonts}
+%\usefonttheme[stillsansseriflarge,stillsansserifsmall]{serif}
+\usepackage{siunitx,booktabs}
+% \AtBeginDocument{\sisetup{math-rm=\mathsf, text-rm=\sffamily}}
+\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
+
+\newlength{\myimscale}
+
+
+% For code blocks in latex
+% Taken from https://github.com/daveyarwood/gruvbox-pygments
+% N.B.
+%  - frame must have [fragile]
+%  - use \begin{onlyenv} not \only
+%  - after a lot of mucking around, I created gruvbox_plain as another style
+%    that exclusively uses gruvbox's bg and fg with no syntax highlighting
+%  - use [autogobble] to remove leading indentations
+
+\usepackage{minted}
+\usemintedstyle{gruvbox-dark}
+\definecolor{gruvbox_dark_bg}{HTML}{282828}
+\definecolor{gruvbox_fg}{HTML}{ebdbb2}
+\definecolor{kgrey}{HTML}{2b2828}
+\setminted[python]{bgcolor=gruvbox_dark_bg}
+\setminted[json]{bgcolor=gruvbox_dark_bg}
+\setminted[shell-session]{style=gruvbox_plain, bgcolor=gruvbox_dark_bg}
+
+% \lstset{breaklines,breakatwhitespace,breakautoindent=false,showstringspaces=false}
+% \lstset{keywordstyle=\color{purple}}
+% \lstset{identifierstyle=\color{blue}}
+% \lstset{basicstyle=\fontfamily{pcr}\fontsize{9pt}{9pt}\selectfont}
+% %\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt}
+% \lstset{linewidth=4.9in,xleftmargin=10pt}
+
+\setbeamercolor{frametitle}{bg=kgrey,fg=white}
+\setbeamerfont{normal text}{family=helvet}
+\setbeamerfont{local structure}{family=helvet}
+
+\setbeamercolor*{author in head/foot}{bg=seaborn_blue}
+\setbeamercolor*{logo in head/foot}{bg=seaborn_blue,fg=white}
+\setbeamercolor*{title in head/foot}{bg=seaborn_blue,fg=white}
+\setbeamercolor*{date in head/foot}{bg=seaborn_blue,fg=white}
+\setbeamercolor{title}{bg=seaborn_blue}
+\setbeamercolor{under headline}{bg=seaborn_red}
+\setbeamercolor{footline}{bg=seaborn_blue}
+\setbeamercolor{caption name}{fg=seaborn_blue}
+\setbeamercolor{block title}{bg=kgrey,fg=white}
+\setbeamercolor{block body}{bg=seaborn_bg_grey,fg=black}
+
+% Footnote style and colour
+% No line over footnote
+\setbeamercolor{footnote}{fg=seaborn_bg_grey_darker}
+
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{blocks}[default]
+\setbeamertemplate{itemize items}{\normalsize $\bullet$}
+\setbeamercolor{description item}{fg=seaborn_blue}
+\setbeamercolor{enumerate item}{fg=seaborn_blue}
+\setbeamercolor{itemize item}{fg=seaborn_blue}
+\setbeamercolor{itemize subitem}{fg=seaborn_blue}
+\setbeamercolor{itemize subsubitem}{fg=seaborn_blue}
+\setbeamercolor*{bibliography entry title}{fg=seaborn_bg_grey_darker}
+\setbeamercolor*{bibliography entry author}{fg=seaborn_bg_grey_darker}
+\setbeamercolor*{bibliography entry location}{fg=seaborn_bg_grey_darker}
+\setbeamercolor*{bibliography entry note}{fg=seaborn_bg_grey_darker}
+% and kill the abominable icon
+\setbeamertemplate{bibliography item}[text]
+
+\setbeamerfont*{title in head/foot}{size=\small}
+\setbeamerfont*{date in head/foot}{size=\small}
+\setbeamerfont*{institute}{size=\Large}
+
+\setbeamertemplate{frametitle}
+{
+  \leavevmode%
+  \vspace{-20pt}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1cm]{frametitle}
+   \hspace{0.115em}
+   \vphantom{P/p} \bf \insertframetitle \vspace{0.2cm}
+   \end{beamercolorbox}%
+  %  \vskip-0.6cm%
+  % \begin{beamercolorbox}[wd=\paperwidth,ht=0.5ex]{under headline}%
+  %   \end{beamercolorbox}%
+	
+}
+
+\newcommand{\insertframeinfo}{| \insertframenumber/\inserttotalframenumber}
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+   \renewcommand{\insertframeinfo}{}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+
+
+\setbeamertemplate{frametitle}
+{
+  \vspace{-1pt}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.8cm]{frametitle}
+   \hspace{0.05em}
+   \begin{minipage}{0.8\textwidth}
+     \bf \insertframetitle
+
+   \end{minipage}
+   \hfill
+   \begin{minipage}{0.15\textwidth}
+   \begin{flushright}
+   \scriptsize \textbf{Edward Linscott}
+   
+   \includegraphics[height=0.21cm]{/home/elinscott/Pictures/epfl_logos/white_cropped.eps}
+   \textbf{\insertframeinfo}
+   \end{flushright}
+   \end{minipage}
+   \vspace{0.125cm}
+  \end{beamercolorbox}%
+}
+
+\setbeamertemplate{title page}
+{
+  \leavevmode%
+  \vbox{%
+  \vspace{-1.6ex}%
+  \noindent\begin{tcolorbox}[enhanced,watermark graphics=/home/elinscott/Pictures/epfl_photos/EPFL-Leman-vue-aerienne-1536x864.jpg, width=\paperwidth, height=0.57\paperwidth, watermark zoom=1.25, grow to left by=0.035\paperwidth, frame hidden]
+
+  \vspace{1.5ex}
+  \begin{minipage}{\textwidth}
+   \begin{flushright}
+   \includegraphics[height=0.05\textheight]{figures/logo_marvel_color_transparent.png}
+   \hspace{0.1ex}
+   \includegraphics[height=0.05\textheight]{/home/elinscott/Pictures/snsf_logos/SNF_logo_standard_web_color_pos_e.png}
+   % \hspace{0.01\textheight}
+   % \includegraphics[height=0.05\textheight]{/home/elinscott/Pictures/epfl_logos/black_cropped.eps}
+   \hspace{0.1cm}\hbox{}
+  \end{flushright}
+
+  \vspace{1em}
+  \begin{center} 
+  \includegraphics[width=0.5\textwidth]{figures/koopmans_white_on_transparent.png}
+
+  \vspace{-0.5em}
+  \textbf{an open-source package for accurately predicting spectral properties}
+  \end{center}
+  \end{minipage}
+  \end{tcolorbox}
+
+  \vspace{-2em}
+  \begin{tcolorbox}[width=\paperwidth, enhanced, colback=kgrey, grow to left by=0.035\paperwidth,]
+  \begin{center}
+  \footnotesize \bf \insertauthor\quad | \quad\insertshortinstitute\quad |\quad \insertdate    
+  \end{center}
+  %  \end{flushright}
+  \end{tcolorbox}
+  }
+
+
+	
+}
+%\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamertemplate{footline}
+{
+}
+
+% Title slide %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \title[Beamer Intro]{\noindent Strongly correlated biological systems\\\Large DFT and beyond}
+\title{\noindent\large{an open-source package for accurately predicting spectral properties}}
+\author{Edward Linscott}
+\institute{Theory and Simulation of Materials, EPFL}
+\date{DFT2022, Brussels, 1 Sep 2022}
+\begin{document}
+
+\frame{\titlepage}
+
+% \begin{frame}{Take home message}
+% 
+%    Koopmans functionals are a class of functionals that aim to reproduce spectral properties and total energies on the same footing
+% 
+%    \vspace{1em}
+%    As a result they give band structures and orbital energies comparable to state-of-the-art GW
+% 
+%    \vspace{1em}
+%    We have just released \texttt{koopmans}, a package that contains everything necessary to run calculations using Koopmans functionals without expert knowledge
+% 
+%    % Koopmans functionals are a class of functionals that aim to reproduce spectral properties (charged excitations) and total energies on the same footing by enforcing a generalized piecewise linearity condition.
+% 
+%    % Koopmans functionals give band structures and orbital energies as accurate as state-of-the-art GW, at a fraction of the computational cost
+% 
+% \end{frame}
+
+% \begin{frame}{Failures of DFT}
+%    \begin{itemize}
+%       \item band gap is almost universally too small
+%       \item problems with ``strongly correlated" systems (e.g. TMOs)
+%       \item problems with vdW interactions
+%       \item eigenvalues are formally meaningless
+%       \item self-interaction error
+%       \item static correlation error
+%    \end{itemize}
+%    % \onslide<3->{
+%    % \begin{equation*}
+%    %    V^x_i\psi_{n_i}(\mathbf{r}) = -\frac{1}{2}\sum_{i\neq j} \psi_{n_j}(\mathbf{r'})\int d\mathbf{r}' \frac{\psi^*_{n_j}(\mathbf{r}')\psi_{n_i}(\mathbf{r}')}{|\mathbf{r} - \mathbf{r}'|}
+%    % \end{equation*}
+%    % }
+% \end{frame}
+
+% \begin{frame}{Self-interaction error}
+%    \nocite{Dabo2010,Borghi2014,Nguyen2018,Colonna2018,Colonna2019,DeGennaro2022,Colonna2022}
+%    % Koopman's theorem\blfootcite{Koopmans1934a}: changes in energy upon removal of electrons from unrelaxed HF orbitals: $\epsilon_{i\sigma} = - \Delta E_{i\sigma}$
+%    % % at least for unrelaxed Hartree Fock
+% 
+%    \begin{overlayarea}{\textwidth}{0.7\textheight}
+%       \begin{center}
+%          \begin{onlyenv}<1>
+%             \includegraphics[height=0.7\textheight]{figures/curvature_plot/fig_en_curve_with_all.pdf}
+%          \end{onlyenv}
+% 
+% 
+%          \begin{onlyenv}<2->
+%             \includegraphics[height=0.7\textheight]{figures/curvature_plot/fig_en_curve_sl_annotated_zoom.pdf}
+%          \end{onlyenv}
+%       \end{center}
+% 
+%    \end{overlayarea}
+% 
+%    \blfootcite{Cohen2008,Li2017}
+% 
+% \end{frame}
+
+\begin{frame}{Koopmans functionals: theory}
+   \hbox{
+      \begin{minipage}{0.5\textwidth}
+         Goal: spectral properties with a functional theory
+
+         \onslide<2->{
+            Core idea: for every orbital $i$ their energy
+            \begin{equation*}
+               \varepsilon^\mathsf{Koopmans}_i = \braopket{\varphi_i}{H}{\varphi_i} = \partial E_\mathsf{Koopmans}/\partial f_i
+            \end{equation*}
+            should be...
+            \begin{itemize}
+               \item independent of its own occupation $f_i$
+               \item equal to the corresponding total energy difference $E_i(N-1) - E(N)$
+            \end{itemize}
+         }
+         %
+      \end{minipage}
+
+      \begin{minipage}{0.45\textwidth}
+         \centering
+         \only<1-2>{
+            \includegraphics[width=\columnwidth]{figures/curvature_plot/fig_en_curve_gradients_zoom.pdf}
+         }
+         \only<3>{
+            \includegraphics[height=0.6\textheight]{figures/fig_gw100_dscf_cf_ks.png}
+         }
+      \end{minipage}
+   }
+\end{frame}
+
+\begin{frame}{Koopmans functionals: theory}
+
+   \vspace{-1.5ex}
+   \begin{align*}
+      E_\mathsf{Koopmans}[\rho,\only<6>{\textcolor{red}}{\{f_i\}}, \only<7->{\textcolor{red}}{\{\alpha_i\}}]
+      = \only<2>{\textcolor{red}}{E_{DFT}[\rho]}
+      + \sum_i
+      \only<7->{\textcolor{red}}
+      {\alpha_i}
+      \Biggl(
+      -
+      \underbrace{
+         \only<3>{\textcolor{red}}{\int^{f_i}_{0} \varepsilon_i(f) df}
+      }_{
+         \substack{\text{removes}  \\ \text{curvature}}
+      }
+      +
+      \underbrace{
+         \only<4>{\textcolor{red}}{f_i \int_0^1 \varepsilon_i(f) df}
+      }_{
+         \substack{\text{restores} \\ \text{linearity}}
+      }
+      \Biggr)
+   \end{align*}
+   \begin{overlayarea}{\textwidth}{0.5\paperheight}
+      \centering
+      \only<1-4>{
+         \vspace{-1em}
+      }
+      % \only<1>{
+      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step0.pdf}
+      % }
+
+      % \only<2>{
+      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step1.pdf}
+      % }
+
+      % \only<3>{
+      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step2.pdf}
+      % }
+
+      % \only<4>{
+      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step3.pdf}
+      % }
+
+      \only<5->{
+         \raggedright
+         Differences to semi-local functionals:
+         \begin{itemize}
+            \item<6-> orbital-density dependence (can use MLWF densities)
+            \item<7-> screening
+         \end{itemize}
+      }
+      \only<6>{
+         \begin{equation*}
+            v^\mathrm{KI}_{\textcolor{red}{i}}/\alpha_i = - E_{\mathrm{H}}\left[\textcolor{red}{n_{i}}\right]
+            + E_{\mathrm{xc}}\left[\rho\right]
+            - E_{\mathrm{xc}}\left[\rho-\textcolor{red}{n_{i}}\right]
+            - \int d\mathbf{r'}
+            v_\mathrm{xc}(\mathbf{r}', [\rho])
+            \textcolor{red}{n_{i}}(\mathbf{r}')
+         \end{equation*}
+      }
+      \only<7->{
+         \begin{equation*}
+            \frac{d E}{d f_i}
+            \approx
+            \alpha_i \frac{\partial E}{\partial f_i}
+            \onslide<8->{
+               \Rightarrow \varepsilon_i^\mathsf{Koopmans} = \frac{\partial E_\mathsf{Koopmans}}{\partial f_i}  \approx E_i(N-1) - E(N)}
+         \end{equation*}
+      }
+
+   \end{overlayarea}
+   \blfootcite{Dabo2010,Borghi2014,Colonna2019}
+\end{frame}
+
+
+% \begin{frame}{Koopmans functionals: comparing}
+%    \small
+%    \renewcommand{\arraystretch}{1.5}
+%    \rowcolors{1}{seaborn_bg_grey}{seaborn_bg_grey_half}
+%    \begin{tabularx}{\columnwidth}{L L L}
+%                                                 & \textbf{DFT+\emph{U}}                                                       & \textbf{Koopmans}                                                                                                                                                   \\
+%       \hline
+%       designed to correct SIE, as defined by... & erroneous global curvature in total energies                                & dependence of $\varepsilon_i$ on $f_i \ \forall i$ \leavevmode\onslide<4->{\textcolor{red}{(canonical orbitals)}}                                                   \\
+%       by construction...                        & corrects local curvature in total energies                                  & removes dependence of $\varepsilon_i$ on $f_i$ and guarantees $\varepsilon_i = E_i(N\pm 1) - E(N)$ \leavevmode\onslide<4->{\textcolor{red}{(variational orbitals)}} \\
+%       correction applied to...                  & selected subspaces only (e.g. \emph{3d} orbitals)                           & the entire system                                                                                                                                                   \\
+%       orbitals defined by...                    & Hubbard projectors (atom-centred, frozen, incomplete)                       & \leavevmode\onslide<2->{variational (minimising) orbitals}                                                                                                          \\
+%       corrective parameters are...              & $\{U^I\}$, defined with respect to charge-neutral excitations (if using LR) & \leavevmode\onslide<3->{$\{\alpha_i\}$, defined with respect to charged excitations}                                                                                \\
+%    \end{tabularx}
+% \end{frame}
+
+\begin{frame}{Koopmans functionals: results for molecules}
+   \small
+   Ionisation potentials $ = E(N-1) - E(N) \stackrel{?}{=} -\varepsilon_{HO}$ of 100 molecules (the GW100 set) cf. CCSD(T)
+   \begin{center}
+      \includegraphics[height=0.2\textwidth]{figures/colonna_2019_gw100_ip}
+      % \onslide<2->{\includegraphics[height=0.23\textwidth]{figures/colonna_2019_gw100_deeper}}
+   \end{center}
+
+   \vspace{-3ex}
+   Ultraviolet photoemission spectra
+   \begin{center}
+      \begin{tikzpicture}
+         \node [inner sep=0pt](fig) at (0,0) {\includegraphics[height=0.35\textheight]{figures/fig_nguyen_prl_spectra.png}};
+         \draw [very thick, color=seaborn_red] (-5.35,-0.07) rectangle (5.4,1.6);
+      \end{tikzpicture}
+   \end{center}
+   \vspace{-2ex}
+
+   \blfootcite{Colonna2018,Nguyen2015}
+\end{frame}
+
+% \begin{frame}{Koopmans functionals: results for molecules}
+%    Electron affinities $ = E(N) - E(N+1) \stackrel{?}{=} -\varepsilon_{LU}$ of molecules cf. CCSD(T)/exp
+%    \vspace{2ex}
+% 
+%    \small
+%    \begin{center}
+%       For 15 of the GW100 molecules with bound LUMOs
+% 
+%       \includegraphics[height=0.5\textheight]{figures/fig_gw100_ea_mae_mse.pdf}
+% 
+%       \textcolor{seaborn_bg_grey_darker}{\footnotesize Linscott et al. (in prep)}
+%    \end{center}
+% \end{frame}
+
+\begin{frame}{Koopmans functionals: results for solids}
+   \begin{minipage}[c]{0.35\textwidth}
+      \includegraphics[width=\textwidth]{figures/fig_nguyen_prx_bandgaps.png}
+   \end{minipage}
+   \hspace{1em}
+   \begin{minipage}[c]{0.6\textwidth}
+
+      \footnotesize
+      Mean absolute error (eV) across prototypical semiconductors and insulators
+
+      \vspace{1ex}
+      \begin{tabular}{c S[table-format = 2.2] S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] S[table-format = 2.2]}
+                          & {PBE} & {G\textsubscript{0}W\textsubscript{0}} & {KI} & {KIPZ} & {QSG$\tilde{\mathrm{W}}$} \\
+         \midrule
+         \midrule
+         $E_\mathrm{gap}$ & 2.54  & 0.56                                   & 0.27 & 0.22   & 0.18                      \\
+         %                                  & {MAPE (\%)} & 48.28 & 12.10      & 7.0           \\
+         \midrule
+         IP               & 1.09  & 0.39                                   & 0.19 & 0.21   & 0.49                      \\
+         %                                  & {MAPE (\%)} & 15.58 & 5.71                                   & 2.99 & 3.14   & 7.41
+      \end{tabular}
+   \end{minipage}
+
+   \blfootcite{Nguyen2018}
+\end{frame}
+
+\begin{frame}{Koopmans functionals: results for solids}
+   \vspace{-0.5em}
+   \begin{figure}[t]
+      \centering
+      \begin{subfigure}{0.45\textwidth}
+         \includegraphics[width=\columnwidth]{figures/Si_kipz_bands.png}
+         \caption{Si, KIPZ}
+      \end{subfigure}
+      \begin{subfigure}{0.45\textwidth}
+         \includegraphics[width=\columnwidth]{figures/GaAs_ki_bands.png}
+         \caption{GaAs, KI}
+      \end{subfigure}
+      % \begin{subfigure}{\textwidth}
+      %    \begin{tabularx}{\columnwidth}{C C C C C C C}
+      %       ZnO                                  & LDA  & HSE  & GW$_0$ & scG$\tilde{\rm W}$ & KI   & exp.      \\
+      %       \hline
+      %       $E_\mathrm{gap}$ (eV)                & 0.79 & 2.79 & 3.0    & 3.2                & 3.62 & 3.60      \\
+      %       $\langle \varepsilon_d \rangle$ (eV) & -5.1 & -6.1 & -6.4   & -6.7               & -6.9 & -7.5/-8.0 \\
+      %    \end{tabularx}
+      % \end{subfigure}
+   \end{figure}
+   \begin{center}
+      \footnotesize
+      \begin{tabular}{l l S[table-format = 2.2] S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] S[table-format = 2.2]}
+                               &                                  & {PBE} & {QSG$\tilde{\mathsf{W}}$} & {KI} & {pKIPZ} & {\bf KIPZ} & {exp} \\
+         \midrule
+         \midrule
+         {Si}                  & $E_\mathrm{gap}$                 & 0.55  & 1.24                      & 1.18 & 1.17    & 1.19       & 1.17  \\
+         \midrule
+         \multirow{2}{*}{GaAs} & $E_\mathrm{gap}$                 & 0.50  & 1.61                      & 1.53 & 1.49    & 1.50       & 1.52  \\
+                               & $\langle \varepsilon_d \rangle $ & 14.9  & 17.6                      & 16.9 &         & 17.7       & 18.9
+      \end{tabular}
+   \end{center}
+   \blfootcite{DeGennaro2022}
+\end{frame}
+
+\begin{frame}{Koopmans functionals: results for solids}
+   \begin{figure}[t]
+      \centering
+      \begin{subfigure}{0.3\textwidth}
+         \includegraphics[width=\columnwidth]{figures/ZnO_lda.png}
+      \end{subfigure}
+      \begin{subfigure}{0.3\textwidth}
+         \includegraphics[width=\columnwidth]{figures/ZnO_hse.png}
+      \end{subfigure}
+      \begin{subfigure}{0.3\textwidth}
+         \includegraphics[width=\columnwidth]{figures/ZnO_ki.png}
+      \end{subfigure}
+      \begin{subfigure}{\textwidth} %<-- changed width
+         \centering
+         %    \renewcommand\tabularxcolumn[1]{m{#1}}% <-- added
+         %    \renewcommand\arraystretch{1.3}
+         %    \setlength\tabcolsep{2pt}% <-- added
+         \begin{tabular}{c S[table-format = 2.2] S[table-format = 2.2] S[table-format = 2.2] S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] S[table-format = 2.2]}
+            ZnO                                  & {LDA} & {HSE} & {GW$_0$} & {scG$\tilde{\rm W}$} & {KI} & {exp}       \\
+            \hline
+            $E_\mathrm{gap}$ (eV)                & 0.79  & 2.79  & 3.0      & 3.2                  & 3.62 & 3.60        \\
+            $\langle \varepsilon_d \rangle$ (eV) & -5.1  & -6.1  & -6.4     & -6.7                 & -6.9 & {-7.5/-8.0} \\
+         \end{tabular}
+         %        \caption{table}
+      \end{subfigure}
+      % \caption{Band structure of ZnO calculated at different level of theory:
+      %    LDA (left panel), HSE (middle panel) and KI (right panel). Shaded areas
+      %    highlight valence (light blue) and conduction (light red) manifolds. The
+      %    experimental values for the band gap and for the energy position of
+      %    Zn $d$-states are represented by the dashed green line and by the dashed
+      %    red line, respectively.
+      %    Table: Band gap and position of Zn $d$ states with respect to the top of the valence band at different level of theory compared to experimental and GW results from Ref.~\onlinecite{shishkin_accurate_2007}.}
+   \end{figure}
+   \blfootcite{Colonna2022}
+\end{frame}
+
+
+\begin{frame}{Koopmans functionals: the workflows}
+   \small Screening coefficients $\{\alpha_i\}$ must be determined first, via\dots
+
+   \vspace{1ex}
+
+   \onslide<2->{
+      (a) finite difference calculations using a supercell
+
+      \vspace{-2ex}
+      \adjustbox{width=\textwidth}{\input{supercell_workflow.tex}\input{supercell_workflow_ml.tex}\end{tikzpicture}}
+   }
+
+   \vspace{-1.5ex}
+   \onslide<3->{
+      (b) DFPT using a primitive cell
+
+      \vspace{-2ex}
+      \adjustbox{width=0.655\textwidth}{\input{primitive_workflow.tex}}
+   }
+
+   \onslide<4->{(c) via machine learning (resulting band gaps within $\sim$ 0.02 eV of explicit approach)} \blfootcite{DeGennaro2022,Colonna2022,Schubert2022}
+   % \onslide<6>{
+   %    \vspace{-0.375\paperheight}
+   %    \begin{flushright}
+   %       \begin{tcolorbox}[enhanced jigsaw, width=4cm, opacityback=0, colframe=seaborn_red, coltext=seaborn_red, left=3pt, bottom=3pt, top=3pt, right=3pt, tikz={rotate=30,transform shape}, boxrule=1.5mm]
+   %          \begin{center}
+   %             \includegraphics[height=1cm]{./figures/qe_logo_high_res_cropped.jpg}
+   %             \bf \huge\ \raisebox{0.3cm}{+}\,
+   %             \includegraphics[height=1cm]{./figures/python_logo.png}
+
+   %             \bf \large OUT NOW!
+   %          \end{center}
+   %       \end{tcolorbox}
+   %    \end{flushright}
+   % }
+
+\end{frame}
+
+\begin{frame}{How can we make these calculations easier?}
+
+   \texttt{kcw.x} (DFPT implementation) is distributed in Quantum ESPRESSO v7.1 onwards
+
+   \vspace{4ex}
+
+   But complex workflows mean that...
+   \begin{itemize}
+      \item lots of different codes that need to handshake
+      \item lots of scope for human error
+      \item reproducibility becomes difficult
+      \item expert knowledge required
+   \end{itemize}
+
+   Our solution...
+
+\end{frame}
+
+\begin{frame}{}
+   \begin{center}
+      \includegraphics[width=0.6\textwidth]{figures/koopmans_grey_on_transparent.png}
+   \end{center}
+
+   \vspace{-2ex}
+
+   \begin{columns}
+      \begin{column}{0.55\textwidth}
+         \begin{itemize}
+            \item beta version just released\footnotemark[1]
+            \item implementations of Koopmans functionals
+            \item automated workflows
+                  \begin{itemize}
+                     \item start-to-finish Koopmans calculations
+                     \item Wannierisation
+                     \item dielectric tensor
+                     \item convergence tests
+                     \item ...
+                  \end{itemize}
+            \item built on top of ASE\footnotemark[2]
+            \item does not require expert knowledge
+         \end{itemize}
+      \end{column}
+
+      \begin{column}{0.4\textwidth}
+         \centering
+         \url{koopmans-functionals.org}
+         \includegraphics[width=\columnwidth]{figures/website_cropped.png}
+      \end{column}
+   \end{columns}
+   \footnotetext[1]{Linscott et al., in prep}
+   \footnotetext[2]{\cite{Larsen2017}}
+\end{frame}
+
+\begin{frame}{koopmans: the input file}
+   \begin{minipage}[t]{0.475\columnwidth}
+      \inputminted[fontsize=\tiny,breaklines,lastline=20]{json}{scripts/si.json}
+   \end{minipage}
+   \hspace{0.025\textwidth}
+   \begin{minipage}[t]{0.475\columnwidth}
+      \inputminted[fontsize=\tiny,breaklines,firstline=21]{json}{scripts/si.json}
+   \end{minipage}
+\end{frame}
+
+% \begin{frame}{koopmans: the output file}
+%    \vspace{-2ex}
+%    \only<1>{
+%       \inputminted[fontsize=\scriptsize,breaklines]{text}{scripts/si_ki_full.out}
+%    }
+%    \only<2>{
+%       \inputminted[fontsize=\scriptsize,breaklines,firstline=25]{text}{scripts/si_ki_full.out}
+%    }
+%    \only<3>{
+%       \inputminted[fontsize=\scriptsize,breaklines,firstline=50]{text}{scripts/si_ki_full.out}
+%    }
+%    \only<4>{
+%       \inputminted[fontsize=\scriptsize,breaklines,firstline=75]{text}{scripts/si_ki_full.out}
+%    }
+% \end{frame}
+
+\begin{frame}{koopmans is scriptable}
+   \vspace{-2ex}
+   \inputminted[fontsize=\scriptsize,breaklines]{python}{scripts/si.py}
+\end{frame}
+
+\begin{frame}{Take home messages}
+
+   \includegraphics[height=0.2\paperheight]{figures/colonna_2019_gw100_ip.jpeg}
+   \hfill
+   \includegraphics[height=0.2\paperheight]{figures/fig_nguyen_prx_bandgaps.png}
+   \hfill
+   \adjustbox{height=0.2\paperheight}{\input{supercell_workflow.tex}\end{tikzpicture}}
+
+   \begin{itemize}
+      \item Koopmans functionals are a class of functionals that treat spectral properties on the same footing as total energy differences (via GPWL)
+      \item they can give orbital energies and band structures with comparable accuracy to state-of-the-art GW
+      \item the release of \texttt{koopmans} means you don't need expert knowledge to run Koopmans functional calculations
+   \end{itemize}
+
+   \begin{center}
+      \scriptsize
+      Want to find out more? Go to \url{koopmans-functionals.org}
+
+      Free online school Nov 9-11 2022 \emph{Advanced Quantum ESPRESSO tutorial: Hubbard and Koopmans functionals from linear response}. Register at \url{https://sites.google.com/view/hubbard-koopmans/home}
+
+      Follow \includegraphics[height=\fontcharht\font`\B]{figures/Twitter_Bird.png} \textcolor{twitter_blue}{@ed\_linscott} for updates | Slides available at \url{elinscott.github.io}
+   \end{center}
+
+   \begin{center}
+      \includegraphics[height=0.07\textheight]{/home/elinscott/Pictures/epfl_logos/red_cropped.eps}
+      \hspace{0.5em}
+      \includegraphics[height=0.07\textheight]{figures/marvel_trimmed.png}
+      \hspace{0.5em}
+      \includegraphics[height=0.07\textheight]{/home/elinscott/Pictures/snsf_logos/SNF_logo_standard_web_color_pos_e.png}
+   \end{center}
+\end{frame}
+
+% \begin{frame}{Acknowledgements}
+%    \begin{center}
+%       \footnotesize
+%       \begin{tabularx}{\textwidth}{CCCC}
+%          \includegraphics[height = 0.3\paperheight]{figures/nicola_marzari.jpg}     &
+%          \includegraphics[height = 0.3\paperheight]{figures/nicola_colonna.png}     &
+%          \includegraphics[height = 0.3\paperheight]{figures/riccardo_degennaro.jpg} &
+%          \includegraphics[height = 0.3\paperheight]{figures/yannick_schubert.jpg}     \\
+%          % \includegraphics[height = 0.2\paperheight]{figures/daniel_cole.jpeg}       &
+%          % \includegraphics[height = 0.2\paperheight]{figures/mike_payne.jpeg}        &
+%          % \includegraphics[height = 0.2\paperheight]{figures/david_oregan.jpg}         \\
+%          Nicola Marzari                                                             &
+%          Nicola Colonna                                                             &
+%          Riccardo De~Gennaro                                                        &
+%          Yannick Schubert                                                             \\
+%       \end{tabularx}
+%    \end{center}
+%    \begin{center}
+%       \includegraphics[height = 0.1\paperheight]{/home/elinscott/Pictures/snsf_logos/SNF_logo_standard_print_color_pos_e.eps}
+%       \hspace{1em}
+%       \includegraphics[height = 0.1\paperheight]{figures/marvel_trimmed.png}
+%    \end{center}
+%    % \begin{multicols}{2}
+%    %   \small
+%    %   \printbibliography
+%    %   \normalsize
+%    % \end{multicols}
+%    \vspace{2ex}
+%    \scriptsize
+% 
+%    \setbeamercolor*{bibliography entry title}{fg=black}
+%    \setbeamercolor*{bibliography entry author}{fg=black}
+%    \setbeamercolor*{bibliography entry location}{fg=black}
+%    \setbeamercolor*{bibliography entry note}{fg=black}
+% 
+%    \vspace{2ex}
+%    \scriptsize
+% \end{frame}
+
+\backupbegin
+\begin{frame}{}
+
+   \begin{center}
+      \huge SPARE SLIDES
+   \end{center}
+
+\end{frame}
+
+\begin{frame}{Koopmans functionals: off-diagonal occupancies}
+   \begin{block}{Recap from earlier}
+      Key idea: construct a functional such that the \emph{variational} orbital energies
+      \begin{equation*}
+         \varepsilon^\mathsf{Koopmans}_i = \braopket{\varphi_i}{H}{\varphi_i} = \partial E_\mathsf{Koopmans}/\partial f_i
+      \end{equation*}
+      are...
+      \begin{itemize}
+         \item independent of the corresponding occupancies $f_i$
+         \item equal to the corresponding total energy difference $E_i(N-1) - E(N)$
+      \end{itemize}
+   \end{block}
+
+   zero band gap $\rightarrow$ occupancy matrix for variational orbitals is off-diagonal
+\end{frame}
+
+\begin{frame}{Learning the screening parameters}
+   \begin{center}
+      \begin{tikzpicture}
+         \node[inner sep=0pt] (water box) at (0,0)
+         {
+            \includegraphics[width=0.25\textwidth]{figures/orbital.emp.00191_cropped.png}
+         };
+         \node[below=0cm of water box] (density) {$\rho_i(\mathbf{r})$};
+         \node[right=0.2\textwidth of water box] (power spectrum) {
+            $
+               \begin{bmatrix}
+                  x_{0} \\
+                  x_{1} \\
+                  x_{2} \\
+                  \vdots
+               \end{bmatrix}
+            $
+         };
+         \path[line] (water box) -- node [midway, above, align=center] (decomposition) {power spectrum \\ decomposition} (power spectrum);
+         \node[right=0.2\textwidth of power spectrum] (screening parameter) {$\alpha_i$};
+         \path[line] (power spectrum) -- node [midway, above, align=center] (model) {ML model} (screening parameter);
+      \end{tikzpicture}
+   \end{center}
+
+   \vspace{-2em}
+
+   \blfootcite{Schubert2022}
+
+\end{frame}
+
+
+\begin{frame}{Details of the power spectrum}
+   \begin{align*}
+      c^i_{nlm,k=\mathrm{orbital}} & =\int d\textbf{r} g_{nl}(r)Y_{lm}(\theta,\varphi)\rho^i(\textbf{r}-\textbf{R}^i) \\
+   \end{align*}
+
+   $g_{nl}$ = orthonormalised radial Gaussian basis functions
+
+   $Y_{lm}$ = spherical harmonics
+
+   \begin{align*}
+      p^i_{n_1n_2l,k_1k_2}=\pi \sqrt{\frac{8}{2l+1}}\sum\limits_m {c_{n_1lm,k_1}^{i *}}c_{n_2lm,k_2}^i \label{eq: power spectrum}
+   \end{align*}
+\end{frame}
+
+\begin{frame}{Learning the screening parameters}
+   \begin{center}
+
+      \includegraphics[height=0.7\paperheight]{figures/CsSnI3_calc_vs_pred_Edward.png}
+      \includegraphics[height=0.7\paperheight]{figures/convergence_analysis_Edward.png}
+
+      loss of accuracy of the band gap of $\sim$ 0.02 eV
+
+      (cf. when calculating screening parameters \emph{ab initio})
+   \end{center}
+
+   \blfootcite{Schubert2022}
+
+\end{frame}
+
+
+
+\begin{frame}{Consequences of ODD}
+   \begin{itemize}
+      \item a natural generalisation in the direction of spectral functional theory\footcite{Ferretti2014}
+      \item variational (localised, minimising) vs canonical (delocalised, diagonalising) orbitals
+            \begin{figure}[t]
+               \centering
+               \begin{subfigure}{0.3\textwidth}
+                  \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_variational_orbital.png}
+                  \caption{variational}
+               \end{subfigure}
+               \hspace{0.1\textwidth}
+               \begin{subfigure}{0.3\textwidth}
+                  \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_canonical_orbital.png}
+                  \caption{canonical}
+               \end{subfigure}
+            \end{figure}
+      \item ODD functional means that we know $\hat H \ket{\varphi_i}$ for variational orbitals $\{\ket{\varphi_i}\}$ but we don't know $\hat H$ in general
+      \item Difficulties when it comes to calculating transport properties/spectra
+      \item Perhaps a DFT+\emph{U}-projector approach is more convenient?
+   \end{itemize}
+   \blfootcite{Nguyen2018}
+
+\end{frame}
+
+\begin{frame}{References}
+   \setbeamercolor*{bibliography entry title}{fg=black}
+   \setbeamercolor*{bibliography entry author}{fg=black}
+   \setbeamercolor*{bibliography entry location}{fg=black}
+   \setbeamercolor*{bibliography entry note}{fg=black}
+   \printbibliography
+   % For further reading on Koopmans functionals, see \cite{Dabo2010,Borghi2014,Nguyen2018,Colonna2018,Colonna2019,DeGennaro2022,Colonna2022}
+
+\end{frame}
+
+\backupend
+\end{document}

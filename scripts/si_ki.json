@@ -1,0 +1,42 @@
+{
+  "workflow": {
+    "functional": "ki",
+    "base_functional": "lda",
+    "method": "dscf",
+    "init_orbitals": "mlwfs",
+    "alpha_guess": 0.077,
+    "pseudo_library": "pseudo_dojo_standard"
+  },
+  "atoms": {
+    "cell_parameters": {
+      "periodic": true,
+      "ibrav": 2,
+      "celldms": {"1": 10.2622}
+    },
+    "atomic_positions": {
+      "units": "crystal",
+      "positions": [["Si", 0.00, 0.00, 0.00],
+                    ["Si", 0.25, 0.25, 0.25]]
+    }
+  },
+  "kpoints": {
+    "grid": [4, 4, 4],
+    "path": "LGXKG"
+  },
+  "calculator_parameters": {
+    "ecutwfc": 60.0,
+    "pw": {
+      "system": {
+        "nbnd": 20
+      }
+    },
+    "w90": {
+      "projections": [{"fsite": [0.25, 0.25, 0.25],
+                       "ang_mtm": "sp3"}],
+      "emp": {
+        "dis_froz_max": 10.6,
+        "dis_win_max": 16.9
+      }
+    }
+  }
+}

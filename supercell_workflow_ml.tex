@@ -1,0 +1,10 @@
+
+% ML
+
+\onslide<4>{
+\node at (1.4, 4.6) [default_text] {\large Calculating screening parameters};
+\fill [seaborn_bg_grey_dark, opacity=0.8] (1.4,-4.6) rectangle (6.9,4.6);
+\node at (4.15, 0) [cp, fill=seaborn_yellow, font=\Huge, inner sep=10pt] (ml) {ML model};
+\path [headless_line] (1.4, 0) -- (ml.west);
+\path [line] (ml) -- (final KI);
+}
