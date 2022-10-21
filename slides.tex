@@ -2,7 +2,7 @@
 \usetheme{Madrid}
 \usepackage{adjustbox}
 %\usetheme{metropolis}
-\usepackage[style=verbose-note, sorting=none, sortcites=true, maxnames=1, giveninits=true, autocite=superscript, doi=false, url=false, isbn=false, backend=biber, citetracker=false, pagetracker=false, bibencoding=utf8]{biblatex}
+\usepackage[style=verbose-note, sorting=none, sortcites=true, maxnames=1, giveninits=true, autocite=superscript, doi=false, url=false, isbn=false, backend=biber, citetracker=false, pagetracker=false, bibencoding=utf8, eprint=false]{biblatex}
 % \usepackage[backend=bibtex,style=authoryear-comp,citestyle=authoryear-comp,firstinits=true,sorting=none,maxnames=1,doi=false,isbn=false,url=false,eprint=false]{biblatex}
 \usepackage[T1]{fontenc}
 
@@ -18,6 +18,7 @@
       \clearfield{title}%
    }{}
    }
+\ExecuteBibliographyOptions[online]{eprint=true}
 
 % "blindfootcite" is the equivalent of "footcite" except the number marker does not appear
 \newcommand\blfootcite[1]{%
@@ -358,21 +359,24 @@
 
 \frame{\titlepage}
 
-% \begin{frame}{Take home message}
-% 
-%    Koopmans functionals are a class of functionals that aim to reproduce spectral properties and total energies on the same footing
-% 
-%    \vspace{1em}
-%    As a result they give band structures and orbital energies comparable to state-of-the-art GW
-% 
-%    \vspace{1em}
-%    We have just released \texttt{koopmans}, a package that contains everything necessary to run calculations using Koopmans functionals without expert knowledge
-% 
-%    % Koopmans functionals are a class of functionals that aim to reproduce spectral properties (charged excitations) and total energies on the same footing by enforcing a generalized piecewise linearity condition.
-% 
-%    % Koopmans functionals give band structures and orbital energies as accurate as state-of-the-art GW, at a fraction of the computational cost
-% 
-% \end{frame}
+\begin{frame}{Take home messages}
+
+   Koopmans functionals are a class of functionals that aim to reproduce spectral properties and total energies on the same footing
+
+   \vspace{1em}
+   As a result they give band structures and orbital energies comparable to state-of-the-art GW
+
+   \vspace{1em}
+   Koopmans can be used to replace GW when calculating neutral excitations with BSE
+
+   \vspace{1em}
+   We have recently released \texttt{koopmans}, a package that contains everything necessary to run calculations using Koopmans functionals without expert knowledge
+
+   % Koopmans functionals are a class of functionals that aim to reproduce spectral properties (charged excitations) and total energies on the same footing by enforcing a generalized piecewise linearity condition.
+
+   % Koopmans functionals give band structures and orbital energies as accurate as state-of-the-art GW, at a fraction of the computational cost
+
+\end{frame}
 
 % \begin{frame}{Failures of DFT}
 %    \begin{itemize}
@@ -434,7 +438,11 @@
 
       \begin{minipage}{0.45\textwidth}
          \centering
-         \only<1-2>{
+         \only<1>{
+            \includegraphics[height=0.7\textheight]{figures/photoemission_costantini.png}
+            \blfootcite{Costantini2020}
+         }
+         \only<2>{
             \includegraphics[width=\columnwidth]{figures/curvature_plot/fig_en_curve_gradients_zoom.pdf}
          }
          \only<3>{
@@ -473,31 +481,31 @@
       \only<1-4>{
          \vspace{-1em}
       }
-      % \only<1>{
-      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step0.pdf}
-      % }
+      \only<1>{
+         \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step0.pdf}
+      }
 
-      % \only<2>{
-      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step1.pdf}
-      % }
+      \only<2>{
+         \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step1.pdf}
+      }
 
-      % \only<3>{
-      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step2.pdf}
-      % }
+      \only<3>{
+         \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step2.pdf}
+      }
 
-      % \only<4>{
-      %    \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step3.pdf}
-      % }
+      \only<4>{
+         \includegraphics[height=0.5\textheight]{figures/curvature_plot/fig_en_curve_koopmans_step3.pdf}
+      }
 
       \only<5->{
          \raggedright
          Differences to semi-local functionals:
          \begin{itemize}
-            \item<6-> orbital-density dependence (can use MLWF densities)
-            \item<7-> screening
+            \item<6-> screening
+            \item<7-> orbital-density dependence
          \end{itemize}
       }
-      \only<6>{
+      \only<7>{
          \begin{equation*}
             v^\mathrm{KI}_{\textcolor{red}{i}}/\alpha_i = - E_{\mathrm{H}}\left[\textcolor{red}{n_{i}}\right]
             + E_{\mathrm{xc}}\left[\rho\right]
@@ -507,7 +515,7 @@
             \textcolor{red}{n_{i}}(\mathbf{r}')
          \end{equation*}
       }
-      \only<7->{
+      \only<6->{
          \begin{equation*}
             \frac{d E}{d f_i}
             \approx
@@ -521,6 +529,30 @@
    \blfootcite{Dabo2010,Borghi2014,Colonna2019}
 \end{frame}
 
+
+\begin{frame}{Koopmans functionals: theory}
+   Consequences of ODD:
+   \begin{itemize}
+      \item a natural generalisation in the direction of spectral functional theory\footcite{Ferretti2014}
+      \item variational (localised, minimising) vs canonical (delocalised, diagonalising) orbitals
+            \begin{figure}[t]
+               \centering
+               \begin{subfigure}{0.3\textwidth}
+                  \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_variational_orbital.png}
+                  \caption{variational}
+               \end{subfigure}
+               \hspace{0.1\textwidth}
+               \begin{subfigure}{0.3\textwidth}
+                  \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_canonical_orbital.png}
+                  \caption{canonical}
+               \end{subfigure}
+            \end{figure}
+      \item ODD functional means that we know $\hat H \ket{\varphi_i}$ for variational orbitals $\{\ket{\varphi_i}\}$ but we don't know $\hat H$ in general
+      \item Practically we can often use MLWFs
+   \end{itemize}
+   \blfootcite{Nguyen2018}
+
+\end{frame}
 
 % \begin{frame}{Koopmans functionals: comparing}
 %    \small
@@ -541,11 +573,11 @@
    Resonance with other efforts:
    \begin{itemize}
       \item Wannier transition-state method of Anisimov and Kozhevnikov \cite{Anisimov2005}
+      \item Optimally tuned hybrid functionals of Kronik, Pasquarello, and others \cite{Kronik2012,Wing2021}
       \item Ensemble DFT of Kronik and co-workers \cite{Kraisler2013}
       \item Koopmans-Wannier of Wang and co-workers \cite{Ma2016}
       \item Dielectric-dependent hybrid functionals of Galli and co-workers \cite{Skone2016a}
       \item LOSC functionals of Yang and co-workers \cite{Li2018}
-      \item Optimally tuned hybrid functionals of Kronik, Pasquarello, and others \cite{Wing2021}
    \end{itemize}
 \end{frame}
 
@@ -682,7 +714,6 @@
    \blfootcite{Colonna2022}
 \end{frame}
 
-
 \begin{frame}{Koopmans functionals: the workflows}
    \small Screening coefficients $\{\alpha_i\}$ must be determined first, via\dots
 
@@ -719,186 +750,6 @@
    %    \end{flushright}
    % }
 
-\end{frame}
-
-\begin{frame}{How can we make these calculations easier?}
-
-   \texttt{kcw.x} (DFPT implementation) is distributed in Quantum ESPRESSO v7.1 onwards
-
-   \vspace{4ex}
-
-   But complex workflows mean that...
-   \begin{itemize}
-      \item lots of different codes that need to handshake
-      \item lots of scope for human error
-      \item reproducibility becomes difficult
-      \item expert knowledge required
-   \end{itemize}
-
-   Our solution...
-
-\end{frame}
-
-\begin{frame}{}
-   \begin{center}
-      \includegraphics[width=0.6\textwidth]{figures/koopmans_grey_on_transparent.png}
-   \end{center}
-
-   \vspace{-2ex}
-
-   \begin{columns}
-      \begin{column}{0.55\textwidth}
-         \begin{itemize}
-            \item beta version just released\footnotemark[1]
-            \item implementations of Koopmans functionals
-            \item automated workflows
-                  \begin{itemize}
-                     \item start-to-finish Koopmans calculations
-                     \item Wannierisation
-                     \item dielectric tensor
-                     \item convergence tests
-                     \item ...
-                  \end{itemize}
-            \item built on top of ASE\footnotemark[2]
-            \item does not require expert knowledge
-         \end{itemize}
-      \end{column}
-
-      \begin{column}{0.4\textwidth}
-         \centering
-         \url{koopmans-functionals.org}
-         \includegraphics[width=\columnwidth]{figures/website_cropped.png}
-      \end{column}
-   \end{columns}
-   \footnotetext[1]{Linscott et al., in prep}
-   \footnotetext[2]{\cite{Larsen2017}}
-\end{frame}
-
-\begin{frame}{koopmans: the input file}
-   \begin{minipage}[t]{0.475\columnwidth}
-      \inputminted[fontsize=\tiny,breaklines,lastline=20]{json}{scripts/si.json}
-   \end{minipage}
-   \hspace{0.025\textwidth}
-   \begin{minipage}[t]{0.475\columnwidth}
-      \inputminted[fontsize=\tiny,breaklines,firstline=21]{json}{scripts/si.json}
-   \end{minipage}
-\end{frame}
-
-% \begin{frame}{koopmans: the output file}
-%    \vspace{-2ex}
-%    \only<1>{
-%       \inputminted[fontsize=\scriptsize,breaklines]{text}{scripts/si_ki_full.out}
-%    }
-%    \only<2>{
-%       \inputminted[fontsize=\scriptsize,breaklines,firstline=25]{text}{scripts/si_ki_full.out}
-%    }
-%    \only<3>{
-%       \inputminted[fontsize=\scriptsize,breaklines,firstline=50]{text}{scripts/si_ki_full.out}
-%    }
-%    \only<4>{
-%       \inputminted[fontsize=\scriptsize,breaklines,firstline=75]{text}{scripts/si_ki_full.out}
-%    }
-% \end{frame}
-
-\begin{frame}{koopmans is scriptable}
-   \vspace{-2ex}
-   \inputminted[fontsize=\scriptsize,breaklines]{python}{scripts/si.py}
-\end{frame}
-
-\begin{frame}{Take home messages}
-
-   \includegraphics[height=0.2\paperheight]{figures/colonna_2019_gw100_ip.jpeg}
-   \hfill
-   \includegraphics[height=0.2\paperheight]{figures/fig_nguyen_prx_bandgaps.png}
-   \hfill
-   \adjustbox{height=0.2\paperheight}{\input{supercell_workflow.tex}\end{tikzpicture}}
-
-   \begin{itemize}
-      \item Koopmans functionals are a class of functionals that treat spectral properties on the same footing as total energy differences (via GPWL)
-      \item they can give orbital energies and band structures with comparable accuracy to state-of-the-art GW
-      \item the release of \texttt{koopmans} means you don't need expert knowledge to run Koopmans functional calculations
-   \end{itemize}
-
-   \begin{center}
-      \scriptsize
-      Want to find out more? Go to \url{koopmans-functionals.org}
-
-      Free online school Nov 9-11 2022 \emph{Advanced Quantum ESPRESSO tutorial: Hubbard and Koopmans functionals from linear response}. Register at \url{https://sites.google.com/view/hubbard-koopmans/home}
-
-      Follow \includegraphics[height=\fontcharht\font`\B]{figures/Twitter_Bird.png} \textcolor{twitter_blue}{@ed\_linscott} for updates | Slides available at \url{elinscott.github.io}
-   \end{center}
-
-   \begin{center}
-      \includegraphics[height=0.07\textheight]{logos/red_cropped.eps}
-      \hspace{0.5em}
-      \includegraphics[height=0.07\textheight]{figures/marvel_trimmed.png}
-      \hspace{0.5em}
-      \includegraphics[height=0.07\textheight]{logos/SNF_logo_standard_web_color_pos_e.png}
-   \end{center}
-\end{frame}
-
-% \begin{frame}{Acknowledgements}
-%    \begin{center}
-%       \footnotesize
-%       \begin{tabularx}{\textwidth}{CCCC}
-%          \includegraphics[height = 0.3\paperheight]{figures/nicola_marzari.jpg}     &
-%          \includegraphics[height = 0.3\paperheight]{figures/nicola_colonna.png}     &
-%          \includegraphics[height = 0.3\paperheight]{figures/riccardo_degennaro.jpg} &
-%          \includegraphics[height = 0.3\paperheight]{figures/yannick_schubert.jpg}     \\
-%          % \includegraphics[height = 0.2\paperheight]{figures/daniel_cole.jpeg}       &
-%          % \includegraphics[height = 0.2\paperheight]{figures/mike_payne.jpeg}        &
-%          % \includegraphics[height = 0.2\paperheight]{figures/david_oregan.jpg}         \\
-%          Nicola Marzari                                                             &
-%          Nicola Colonna                                                             &
-%          Riccardo De~Gennaro                                                        &
-%          Yannick Schubert                                                             \\
-%       \end{tabularx}
-%    \end{center}
-%    \begin{center}
-%       \includegraphics[height = 0.1\paperheight]{logos/SNF_logo_standard_print_color_pos_e.eps}
-%       \hspace{1em}
-%       \includegraphics[height = 0.1\paperheight]{figures/marvel_trimmed.png}
-%    \end{center}
-%    % \begin{multicols}{2}
-%    %   \small
-%    %   \printbibliography
-%    %   \normalsize
-%    % \end{multicols}
-%    \vspace{2ex}
-%    \scriptsize
-% 
-%    \setbeamercolor*{bibliography entry title}{fg=black}
-%    \setbeamercolor*{bibliography entry author}{fg=black}
-%    \setbeamercolor*{bibliography entry location}{fg=black}
-%    \setbeamercolor*{bibliography entry note}{fg=black}
-% 
-%    \vspace{2ex}
-%    \scriptsize
-% \end{frame}
-
-\backupbegin
-\begin{frame}{}
-
-   \begin{center}
-      \huge SPARE SLIDES
-   \end{center}
-
-\end{frame}
-
-\begin{frame}{Koopmans functionals: off-diagonal occupancies}
-   \begin{block}{Recap from earlier}
-      Key idea: construct a functional such that the \emph{variational} orbital energies
-      \begin{equation*}
-         \varepsilon^\mathsf{Koopmans}_i = \braopket{\varphi_i}{H}{\varphi_i} = \partial E_\mathsf{Koopmans}/\partial f_i
-      \end{equation*}
-      are...
-      \begin{itemize}
-         \item independent of the corresponding occupancies $f_i$
-         \item equal to the corresponding total energy difference $E_i(N-1) - E(N)$
-      \end{itemize}
-   \end{block}
-
-   zero band gap $\rightarrow$ occupancy matrix for variational orbitals is off-diagonal
 \end{frame}
 
 \begin{frame}{Learning the screening parameters}
@@ -961,29 +812,219 @@
 
 \end{frame}
 
-\begin{frame}{Consequences of ODD}
+\begin{frame}{How can we make these calculations easier?}
+
+   \texttt{kcw.x} (DFPT implementation) is distributed in Quantum ESPRESSO v7.1 onwards
+
+   \vspace{4ex}
+
+   But complex workflows mean that...
    \begin{itemize}
-      \item a natural generalisation in the direction of spectral functional theory\footcite{Ferretti2014}
-      \item variational (localised, minimising) vs canonical (delocalised, diagonalising) orbitals
-            \begin{figure}[t]
-               \centering
-               \begin{subfigure}{0.3\textwidth}
-                  \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_variational_orbital.png}
-                  \caption{variational}
-               \end{subfigure}
-               \hspace{0.1\textwidth}
-               \begin{subfigure}{0.3\textwidth}
-                  \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_canonical_orbital.png}
-                  \caption{canonical}
-               \end{subfigure}
-            \end{figure}
-      \item ODD functional means that we know $\hat H \ket{\varphi_i}$ for variational orbitals $\{\ket{\varphi_i}\}$ but we don't know $\hat H$ in general
-      \item Difficulties when it comes to calculating transport properties/spectra
-      \item Perhaps a DFT+\emph{U}-projector approach is more convenient?
+      \item lots of different codes that need to handshake
+      \item lots of scope for human error
+      \item reproducibility becomes difficult
+      \item expert knowledge required
    \end{itemize}
-   \blfootcite{Nguyen2018}
+
+   Our solution...
 
 \end{frame}
+
+\begin{frame}{}
+   \begin{center}
+      \includegraphics[width=0.6\textwidth]{figures/koopmans_grey_on_transparent.png}
+   \end{center}
+
+   \vspace{-2ex}
+
+   \begin{columns}
+      \begin{column}{0.55\textwidth}
+         \begin{itemize}
+            \item beta version released earlier this year\footnotemark[1]
+            \item implementations of Koopmans functionals
+            \item automated workflows
+                  \begin{itemize}
+                     \item start-to-finish Koopmans calculations
+                     \item Wannierisation
+                     \item dielectric tensor
+                     \item convergence tests
+                     \item ...
+                  \end{itemize}
+            \item built on top of ASE\footnotemark[2]
+            \item does not require expert knowledge
+         \end{itemize}
+      \end{column}
+
+      \begin{column}{0.4\textwidth}
+         \centering
+         \url{koopmans-functionals.org}
+         \includegraphics[width=\columnwidth]{figures/website_cropped.png}
+      \end{column}
+   \end{columns}
+   \footnotetext[1]{Linscott et al., in prep}
+   \footnotetext[2]{\cite{Larsen2017}}
+\end{frame}
+
+\begin{frame}{koopmans: the input file}
+   \begin{minipage}[t]{0.475\columnwidth}
+      \inputminted[fontsize=\tiny,breaklines,lastline=20]{json}{scripts/si.json}
+   \end{minipage}
+   \hspace{0.025\textwidth}
+   \begin{minipage}[t]{0.475\columnwidth}
+      \inputminted[fontsize=\tiny,breaklines,firstline=21]{json}{scripts/si.json}
+   \end{minipage}
+\end{frame}
+
+% \begin{frame}{koopmans: the output file}
+%    \vspace{-2ex}
+%    \only<1>{
+%       \inputminted[fontsize=\scriptsize,breaklines]{text}{scripts/si_ki_full.out}
+%    }
+%    \only<2>{
+%       \inputminted[fontsize=\scriptsize,breaklines,firstline=25]{text}{scripts/si_ki_full.out}
+%    }
+%    \only<3>{
+%       \inputminted[fontsize=\scriptsize,breaklines,firstline=50]{text}{scripts/si_ki_full.out}
+%    }
+%    \only<4>{
+%       \inputminted[fontsize=\scriptsize,breaklines,firstline=75]{text}{scripts/si_ki_full.out}
+%    }
+% \end{frame}
+
+\begin{frame}{koopmans is scriptable}
+   \vspace{-2ex}
+   \inputminted[fontsize=\scriptsize,breaklines]{python}{scripts/si.py}
+\end{frame}
+
+\begin{frame}{Neutral excitations with Koopmans}
+   \centering
+   \includegraphics[width=0.5\textwidth]{figures/elliott_workflow.jpeg}
+   \blfootcite{Elliott2019}
+\end{frame}
+
+\begin{frame}{Neutral excitations with Koopmans}
+   \begin{columns}
+      \begin{column}{0.4\textwidth}
+         \includegraphics[width=\textwidth]{figures/elliott_scatter2.jpeg}
+      \end{column}
+      \begin{column}{0.6\textwidth}
+         \footnotesize
+         \begin{tabular}{c >{\color{seaborn_red}\bfseries}S[table-format = 2.2] S[table-format = 2.2] S[table-format = 2.2] S[table-format = 2.2] S[table-format = 2.2]}
+            \multirow{2}{*}{Thiel's set} & {KI-BSE} & \multicolumn{2}{c}{G$_0$W$_0$-BSE} & \multicolumn{2}{c}{TDDFT}                   \\
+                                         & {PBE}    & {PBE}                              & {B3LYP}                   & {PBE} & {B3LYP} \\
+            \hline
+            MAE (eV)                     & 0.54     & 0.83                               & 0.46                      & 0.55  & 0.27
+         \end{tabular}
+
+         \vspace{2ex}
+         \onslide<2->{
+            Based on RPA $\rightarrow$ room for improvement with finite-field approaches
+         }
+
+      \end{column}
+   \end{columns}
+   \centering
+
+   \vspace{1ex}
+   \blfootcite{Elliott2019}
+   \blfootcite{Nguyen2019}
+
+\end{frame}
+
+\begin{frame}{Take home messages}
+
+   \includegraphics[height=0.2\paperheight]{figures/colonna_2019_gw100_ip.jpeg}
+   \hfill
+   \includegraphics[height=0.2\paperheight]{figures/fig_nguyen_prx_bandgaps.png}
+   \hfill
+   \adjustbox{height=0.2\paperheight}{\input{supercell_workflow.tex}\end{tikzpicture}}
+
+   \begin{itemize}
+      \item Koopmans functionals are a class of functionals that treat spectral properties on the same footing as total energy differences (via GPWL)
+      \item they can give orbital energies and band structures with comparable accuracy to state-of-the-art GW
+      \item the release of \texttt{koopmans} means you don't need expert knowledge to run Koopmans functional calculations
+      \item Koopmans can replace GW when calculating neutral excitations with BSE
+   \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Acknowledgements}
+   \begin{center}
+      \footnotesize
+      \begin{tabularx}{\textwidth}{CCCC}
+         \includegraphics[height = 0.3\paperheight]{figures/nicola_marzari.jpg}     &
+         \includegraphics[height = 0.3\paperheight]{figures/nicola_colonna.png}     &
+         \includegraphics[height = 0.3\paperheight]{figures/riccardo_degennaro.jpg} &
+         \includegraphics[height = 0.3\paperheight]{figures/yannick_schubert.jpg}     \\
+         % \includegraphics[height = 0.2\paperheight]{figures/daniel_cole.jpeg}       &
+         % \includegraphics[height = 0.2\paperheight]{figures/mike_payne.jpeg}        &
+         % \includegraphics[height = 0.2\paperheight]{figures/david_oregan.jpg}         \\
+         Nicola Marzari                                                             &
+         Nicola Colonna                                                             &
+         Riccardo De~Gennaro                                                        &
+         Yannick Schubert                                                             \\
+      \end{tabularx}
+   \end{center}
+   \begin{center}
+      \includegraphics[height = 0.15\paperheight]{logos/SNF_logo_standard_print_color_pos_e.eps}
+      \hspace{1em}
+      \includegraphics[height = 0.15\paperheight]{figures/marvel_trimmed.png}
+   \end{center}
+
+   \begin{center}
+      \vspace{1em}
+      \small
+      Want to find out more? Go to \url{koopmans-functionals.org}
+      \vspace{1em}
+
+      Free online school Nov 9-11 2022 \emph{Advanced Quantum ESPRESSO tutorial: Hubbard and Koopmans functionals from linear response}. Too late to register but it will be recorded!
+      \vspace{1em}
+
+      Follow \includegraphics[height=\fontcharht\font`\B]{figures/Twitter_Bird.png} \textcolor{twitter_blue}{@ed\_linscott} for updates | Slides available at \includegraphics[height=\fontcharht\font`\B]{logos/github-favicon.png} github/elinscott
+   \end{center}
+
+   % \begin{multicols}{2}
+   %    \tiny
+   %    \printbibliography
+   %    \normalsize
+   % \end{multicols}
+   \vspace{2ex}
+   \scriptsize
+
+   \setbeamercolor*{bibliography entry title}{fg=black}
+   \setbeamercolor*{bibliography entry author}{fg=black}
+   \setbeamercolor*{bibliography entry location}{fg=black}
+   \setbeamercolor*{bibliography entry note}{fg=black}
+
+   \vspace{2ex}
+   \scriptsize
+\end{frame}
+
+\backupbegin
+\begin{frame}{}
+
+   \begin{center}
+      \huge SPARE SLIDES
+   \end{center}
+
+\end{frame}
+
+\begin{frame}{Koopmans functionals: off-diagonal occupancies}
+   \begin{block}{Recap from earlier}
+      Key idea: construct a functional such that the \emph{variational} orbital energies
+      \begin{equation*}
+         \varepsilon^\mathsf{Koopmans}_i = \braopket{\varphi_i}{H}{\varphi_i} = \partial E_\mathsf{Koopmans}/\partial f_i
+      \end{equation*}
+      are...
+      \begin{itemize}
+         \item independent of the corresponding occupancies $f_i$
+         \item equal to the corresponding total energy difference $E_i(N-1) - E(N)$
+      \end{itemize}
+   \end{block}
+
+   zero band gap $\rightarrow$ occupancy matrix for variational orbitals is off-diagonal
+\end{frame}
+
 
 % \begin{frame}{References}
 %    \setbeamercolor*{bibliography entry title}{fg=black}

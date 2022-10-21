@@ -25,13 +25,14 @@
   "calculator_parameters": {
     "ecutwfc": 60.0,
     "w90": {
-      "projections": [{"fsite": [0.125, 0.125, 0.125],
-               "ang_mtm": "sp3"}]
-      ,
-      "emp": {
-        "dis_froz_max": 11.5,
-        "dis_win_max": 17.0
-      }
+      "projections": [
+          [{"fsite": [0.125, 0.125, 0.125],
+            "ang_mtm": "sp3"}],
+          [{"fsite": [0.125, 0.125, 0.125],
+            "ang_mtm": "sp3"}]
+      ],
+      "dis_froz_max": 11.5,
+      "dis_win_max": 17.0
     }
   }
 }
