@@ -440,7 +440,6 @@
          \centering
          \only<1>{
             \includegraphics[height=0.7\textheight]{figures/photoemission_costantini.png}
-            \blfootcite{Costantini2020}
          }
          \only<2>{
             \includegraphics[width=\columnwidth]{figures/curvature_plot/fig_en_curve_gradients_zoom.pdf}
@@ -450,16 +449,19 @@
          }
       \end{minipage}
    }
+   \only<1>{
+      \blfootcite{Costantini2020}
+   }
 \end{frame}
 
 \begin{frame}{Koopmans functionals: theory}
 
    \vspace{-1.5ex}
    \begin{align*}
-      E_\mathsf{Koopmans}[\rho,\only<6>{\textcolor{red}}{\{f_i\}}, \only<7->{\textcolor{red}}{\{\alpha_i\}}]
+      E_\mathsf{Koopmans}[\rho,\only<8->{\textcolor{red}}{\{f_i\}}, \only<6-7>{\textcolor{red}}{\{\alpha_i\}}]
       = \only<2>{\textcolor{red}}{E_{DFT}[\rho]}
       + \sum_i
-      \only<7->{\textcolor{red}}
+      \only<6-7>{\textcolor{red}}
       {\alpha_i}
       \Biggl(
       -
@@ -502,10 +504,10 @@
          Differences to semi-local functionals:
          \begin{itemize}
             \item<6-> screening
-            \item<7-> orbital-density dependence
+            \item<8-> orbital-density dependence
          \end{itemize}
       }
-      \only<7>{
+      \only<8->{
          \begin{equation*}
             v^\mathrm{KI}_{\textcolor{red}{i}}/\alpha_i = - E_{\mathrm{H}}\left[\textcolor{red}{n_{i}}\right]
             + E_{\mathrm{xc}}\left[\rho\right]
@@ -515,12 +517,12 @@
             \textcolor{red}{n_{i}}(\mathbf{r}')
          \end{equation*}
       }
-      \only<6->{
+      \only<6-7>{
          \begin{equation*}
             \frac{d E}{d f_i}
             \approx
             \alpha_i \frac{\partial E}{\partial f_i}
-            \onslide<8->{
+            \onslide<7->{
                \Rightarrow \varepsilon_i^\mathsf{Koopmans} = \frac{\partial E_\mathsf{Koopmans}}{\partial f_i}  \approx E_i(N-1) - E(N)}
          \end{equation*}
       }
@@ -533,7 +535,6 @@
 \begin{frame}{Koopmans functionals: theory}
    Consequences of ODD:
    \begin{itemize}
-      \item a natural generalisation in the direction of spectral functional theory\footcite{Ferretti2014}
       \item variational (localised, minimising) vs canonical (delocalised, diagonalising) orbitals
             \begin{figure}[t]
                \centering
@@ -549,6 +550,7 @@
             \end{figure}
       \item ODD functional means that we know $\hat H \ket{\varphi_i}$ for variational orbitals $\{\ket{\varphi_i}\}$ but we don't know $\hat H$ in general
       \item Practically we can often use MLWFs
+      \item a natural generalisation in the direction of spectral functional theory\footcite{Ferretti2014}
    \end{itemize}
    \blfootcite{Nguyen2018}
 
@@ -734,7 +736,7 @@
       \adjustbox{width=0.655\textwidth}{\input{primitive_workflow.tex}}
    }
 
-   \onslide<4->{(c) via machine learning (resulting band gaps within $\sim$ 0.02 eV of explicit approach)} \blfootcite{DeGennaro2022,Colonna2022,Schubert2022}
+   \onslide<4->{(c) via machine learning} \blfootcite{DeGennaro2022,Colonna2022,Schubert2022}
    % \onslide<6>{
    %    \vspace{-0.375\paperheight}
    %    \begin{flushright}
@@ -776,25 +778,19 @@
       \end{tikzpicture}
    \end{center}
 
-   \vspace{-2em}
+   \vspace{-4em}
 
    \blfootcite{Schubert2022}
 
-\end{frame}
-
-
-\begin{frame}{Details of the power spectrum}
    \begin{align*}
-      c^i_{nlm,k=\mathrm{orbital}} & =\int d\textbf{r} g_{nl}(r)Y_{lm}(\theta,\varphi)\rho^i(\textbf{r}-\textbf{R}^i) \\
+      c^i_{nlm,k=\mathrm{orbital}} & =\int d\textbf{r} g_{nl}(r)Y_{lm}(\theta,\varphi)\rho^i(\textbf{r}-\textbf{R}^i)                        \\
+      p^i_{n_1n_2l,k_1k_2}         & =\pi \sqrt{\frac{8}{2l+1}}\sum\limits_m {c_{n_1lm,k_1}^{i *}}c_{n_2lm,k_2}^i \label{eq: power spectrum}
    \end{align*}
 
-   $g_{nl}$ = orthonormalised radial Gaussian basis functions
+   % $g_{nl}$ = orthonormalised radial Gaussian basis functions
 
-   $Y_{lm}$ = spherical harmonics
+   % $Y_{lm}$ = spherical harmonics
 
-   \begin{align*}
-      p^i_{n_1n_2l,k_1k_2}=\pi \sqrt{\frac{8}{2l+1}}\sum\limits_m {c_{n_1lm,k_1}^{i *}}c_{n_2lm,k_2}^i \label{eq: power spectrum}
-   \end{align*}
 \end{frame}
 
 \begin{frame}{Learning the screening parameters}
