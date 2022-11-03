@@ -132,8 +132,9 @@
 \usesmartdiagramlibrary{additions}
 \usepackage{multicol}
 \usepackage{helvet}
-\usepackage{sansmath}
-\sansmath
+% \usepackage{sansmath}
+% \sansmath
+\usepackage{cancel} % for \cancel
 \usepackage[normalem]{ulem} % for sout (strike out)
 \usepackage{tcolorbox}
 \tcbuselibrary{skins,hooks}
@@ -183,7 +184,7 @@
 \newcommand{\braopket}[3]{\langle #1|#2|#3\rangle}
 \newcommand{\ket}[1]{|#1\rangle}
 \newcommand{\nline}{\nonumber \\}
-\newcommand{\Trace}{\mathrm{Tr}}
+\newcommand{\Trace}{\mathsf{Tr}}
 
 \renewcommand{\ttdefault}{pcr} % enables bold fixed width font
 \numberwithin{equation}{section}
@@ -435,7 +436,8 @@
       \begin{minipage}{0.45\textwidth}
          \centering
          \only<1>{
-            \includegraphics[height=0.7\textheight]{figures/photoemission_costantini.png}
+            \includegraphics[height=0.7\textheight]{figures/golze_pes.jpg}
+            % \includegraphics[height=0.7\textheight]{figures/photoemission_costantini.png}
          }
          \only<2>{
             \includegraphics[width=\columnwidth]{figures/curvature_plot/fig_en_curve_gradients_zoom.pdf}
@@ -446,7 +448,7 @@
       \end{minipage}
    }
    \only<1>{
-      \blfootcite{Costantini2020}
+      \blfootcite{Golze2019}
    }
 \end{frame}
 
@@ -524,23 +526,25 @@
          \raggedright
          Differences to semi-local functionals:
          \begin{itemize}
-            \item<3-> orbital-density dependence
-            \item<4-> screening
+            \item<3-> different flavours
+            \item<4-> orbital-density dependence
+            \item<5-> screening
          \end{itemize}
       }
 
    \end{overlayarea}
-   \blfootcite{Dabo2010,Borghi2014,Colonna2019}
+   \blfootcite{Dabo2010}
+   \blfootcite{Borghi2014}
+   \blfootcite{Colonna2019}
 \end{frame}
 
-\begin{frame}{Orbital-density-dependence}
-
-   Discuss here why we have orbital-density-dependence
+\begin{frame}{Flavours of Koopmans functionals}
 
    \begin{align*}
-      E_\mathsf{Koopmans}[\rho,{\{f_i\}}, {\{\alpha_i\}}]
+      E_\mathsf{Koopmans}[\rho,\only<3>{\textcolor{red}}{\{f_i\}}, \only<4>{\textcolor{red}}{\{\alpha_i\}}]
       = {E_{DFT}[\rho]}
       + \sum_i
+      \only<4>{\textcolor{red}}
       {\alpha_i}
       \Biggl(
       -
@@ -558,33 +562,120 @@
       \Biggr)
    \end{align*}
 
-   \begin{equation*}
-      v^\mathrm{KI}_{\textcolor{red}{i}}/\alpha_i = - E_{\mathrm{H}}\left[\textcolor{red}{n_{i}}\right]
-      + E_{\mathrm{xc}}\left[\rho\right]
-      - E_{\mathrm{xc}}\left[\rho-\textcolor{red}{n_{i}}\right]
-      - \int d\mathbf{r'}
-      v_\mathrm{xc}(\mathbf{r}', [\rho])
-      \textcolor{red}{n_{i}}(\mathbf{r}')
-   \end{equation*}
+   One degree of freedom: what should be the gradient of this linear term?
+
+   \begin{itemize}
+      \item<2-> the base functional $\rightarrow$ ``KI" (Koopmans integral). Does not affect density!
+      \item<3-> with a PZ correction $\rightarrow$ KIPZ
+   \end{itemize}
+
+   \onslide<4->{You might also see\dots}
+
+   \begin{itemize}
+      \item<5-> ``pKIPZ'' = KIPZ Hamiltonian evaluated on the KI solution
+      \item<6-> ``K'' = an earlier iteration based off half-filling rather than integer endpoints (no longer used)
+   \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Orbital-density-dependence}
-   variational (localised, minimising) vs canonical (delocalised, diagonalising) orbitals
+
+   \begin{align*}
+      -
+      {\int^{f_i}_{0} \varepsilon_i(f) df}
+      +
+      {f_i \int_0^1 \varepsilon_i(f) df}
+      = E_\mathsf{Hxc}[\rho] + E_\mathsf{Hxc}[\rho - \rho_i]
+      + f_i\left(-E_\mathsf{Hxc}[\rho - \rho_i] + E_\mathsf{Hxc}[\rho - \rho_i + n_i]\right)
+   \end{align*}
+
+   \onslide<2->{
+      Potential is given by $v_{i}(\mathsf{r}) = \frac{\delta E}{\delta \rho_i(\mathbf{r})}$. After some derivation\dots
+
+      \begin{align*}
+         v_i/\alpha_i = v_\mathsf{scalar} {+ \delta_{ij}v_\mathsf{diag}(\mathbf{r}) + (1 - \delta_{ij})v_\mathsf{nondiag}(\mathbf{r})}
+      \end{align*}
+
+   }
+   \onslide<3->{
+      For filled orbitals with KI:
+
+      \begin{equation*}
+         v^\mathsf{KI}_{\textcolor{red}{i}}/\alpha_i = - E_{\mathsf{H}}\left[\textcolor{red}{n_{i}}\right]
+         + E_{\mathsf{xc}}\left[\rho\right]
+         - E_{\mathsf{xc}}\left[\rho-\textcolor{red}{n_{i}}\right]
+         - \int d\mathbf{r'}
+         v_\mathsf{xc}(\mathbf{r}', [\rho])
+         \textcolor{red}{n_{i}}(\mathbf{r}')
+      \end{equation*}
+   }
+\end{frame}
+
+\begin{frame}{Orbital-density-dependence}
+   Solve with CG minimisation (outer and inner loop)\footcite{Borghi2015}
+   \vspace{1ex}
+
+   \onslide<2->{
+      Gives rise to a set of minimising orbitals (localised/variational)
+      \vspace{1ex}
+   }
+
+   \onslide<3->{
+      Diagonalising at the minimum gives rise to diagonalising orbitals (delocalised/canonical)
+      \vspace{1ex}
+   }
+
    \begin{figure}[t]
       \centering
-      \begin{subfigure}{0.3\textwidth}
-         \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_variational_orbital.png}
-         \caption{variational}
-      \end{subfigure}
-      \hspace{0.1\textwidth}
-      \begin{subfigure}{0.3\textwidth}
-         \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_canonical_orbital.png}
-         \caption{canonical}
-      \end{subfigure}
+      \onslide<2->{
+         \begin{subfigure}{0.4\textwidth}
+            \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_variational_orbital.png}
+            \caption{variational}
+         \end{subfigure}
+      }
+      \hspace{0.05\textwidth}
+      \onslide<3->{
+         \begin{subfigure}{0.4\textwidth}
+            \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_canonical_orbital.png}
+            \caption{canonical}
+         \end{subfigure}
+      }
    \end{figure}
    \blfootcite{Nguyen2018}
 
+\end{frame}
+
+\begin{frame}{Importance of localisation}
+   \begin{center}
+      \includegraphics[width=0.6\textwidth]{figures/nguyen_bulk_limit.png}
+   \end{center}
+   \blfootcite{Nguyen2018}
+
+   \vspace{-2ex}
+
+   \only<2-3>{
+      In the bulk limit for one cell $\Delta E = E(N-\delta) - E(N)$
+   }
+
+   \only<3>{
+      Across all the cells $
+         \Delta E = \frac{1}{\delta N}\left(E(N-\delta N) - E(N)\right) = -\frac{dE}{dN} = -\varepsilon_\mathsf{HO}$
+   }
+
+   \only<4->{
+      \begin{equation*}
+         \lim_{n_i(r) \rightarrow 0}
+         v^\mathsf{KI}_{{i}}/\alpha_i =
+         \lim_{n_i(r) \rightarrow 0}
+         - E_{\mathsf{H}}\left[{n_{i}}\right]
+         + E_{\mathsf{xc}}\left[\rho\right]
+         - E_{\mathsf{xc}}\left[\rho-{n_{i}}\right]
+         - \int d\mathbf{r'}
+         v_\mathsf{xc}(\mathbf{r}', [\rho])
+         {n_{i}}(\mathbf{r}')
+         = 0
+      \end{equation*}
+   }
 \end{frame}
 
 \begin{frame}{Koopmans functionals: theory}
@@ -610,27 +701,8 @@
    \end{equation*}
 \end{frame}
 
-\begin{frame}{Importance of localisation}
-   Slides on importance of localisation
-\end{frame}
-
-\begin{frame}{Koopmans functionals: comparing}
-   \small
-   \renewcommand{\arraystretch}{1.5}
-   \rowcolors{1}{seaborn_bg_grey}{seaborn_bg_grey_half}
-   \begin{tabularx}{\columnwidth}{L L L}
-                                                & \textbf{DFT+\emph{U}}                                                       & \textbf{Koopmans}                                                                                                                                                   \\
-      \hline
-      designed to correct SIE, as defined by... & erroneous global curvature in total energies                                & dependence of $\varepsilon_i$ on $f_i \ \forall i$ \leavevmode\onslide<4->{\textcolor{red}{(canonical orbitals)}}                                                   \\
-      by construction...                        & corrects local curvature in total energies                                  & removes dependence of $\varepsilon_i$ on $f_i$ and guarantees $\varepsilon_i = E_i(N\pm 1) - E(N)$ \leavevmode\onslide<4->{\textcolor{red}{(variational orbitals)}} \\
-      correction applied to...                  & selected subspaces only (e.g. \emph{3d} orbitals)                           & the entire system                                                                                                                                                   \\
-      orbitals defined by...                    & Hubbard projectors (atom-centred, frozen, incomplete)                       & \leavevmode\onslide<2->{variational (minimising) orbitals}                                                                                                          \\
-      corrective parameters are...              & $\{U^I\}$, defined with respect to charge-neutral excitations (if using LR) & \leavevmode\onslide<3->{$\{\alpha_i\}$, defined with respect to charged excitations}                                                                                \\
-   \end{tabularx}
-\end{frame}
-
-\begin{frame}{Koopmans functionals: the workflows}
-   \small Screening coefficients $\{\alpha_i\}$ must be determined first, via\dots
+\begin{frame}{Screening}
+   \small Workflows for calculating screening parameters
 
    \vspace{1ex}
 
@@ -643,13 +715,13 @@
 
    \vspace{-1.5ex}
    \onslide<3->{
-      (b) DFPT using a primitive cell
+      (b) DFPT (see Nicola Colonna's talk)
 
       \vspace{-2ex}
       \adjustbox{width=0.655\textwidth}{\input{primitive_workflow.tex}}
    }
 
-   \onslide<4->{(c) via machine learning} \blfootcite{DeGennaro2022,Colonna2022,Schubert2022}
+   \onslide<4->{(c) via machine learning (see Yannick Schubert's talk)} \blfootcite{DeGennaro2022,Colonna2022,Schubert2022}
    % \onslide<6>{
    %    \vspace{-0.375\paperheight}
    %    \begin{flushright}
@@ -667,9 +739,7 @@
 
 \end{frame}
 
-
-\begin{frame}{Koopmans functionals: theory}
-   Resonance with other efforts:
+\begin{frame}{Resonance with other efforts}
    \begin{itemize}
       \item Wannier transition-state method of Anisimov and Kozhevnikov \cite{Anisimov2005}
       \item Optimally tuned hybrid functionals of Kronik, Pasquarello, and others (refer back to Leeor's talk on Wednesday) \cite{Kronik2012,Wing2021}
@@ -678,6 +748,22 @@
       \item Dielectric-dependent hybrid functionals of Galli and co-workers \cite{Skone2016a}
       \item LOSC functionals of Yang and co-workers \cite{Li2018}
    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Koopmans compared to DFT+\emph{U}}
+   \small
+   \renewcommand{\arraystretch}{1.5}
+   \rowcolors{1}{seaborn_bg_grey}{seaborn_bg_grey_half}
+   \begin{tabularx}{\columnwidth}{L L L}
+                                   & \textbf{DFT+\emph{U}}                                                       & \textbf{Koopmans}                                                                                                           \\
+      \hline
+      % designed to correct SIE, as defined by... & erroneous global curvature in total energies                                & dependence of $\varepsilon_i$ on $f_i \ \forall i$ \leavevmode\onslide<4->{\textcolor{red}{(canonical orbitals)}}                                                   \\
+      the functional...            & corrects local curvature in total energies                                  & \leavevmode\onslide<2->{removes dependence of $\varepsilon_i$ on $f_i$ and guarantees $\varepsilon_i = E_i(N\pm 1) - E(N)$} \\
+      correction applied to...     & selected subspaces only (e.g. \emph{3d} orbitals)                           & \leavevmode\onslide<3->{every variational orbital in the entire system}                                                     \\
+      orbitals defined by...       & Hubbard projectors (atom-centred, frozen, incomplete)                       & \leavevmode\onslide<4->{variational (minimising) orbitals}                                                                  \\
+      corrective parameters are... & $\{U^I\}$, defined with respect to charge-neutral excitations (if using LR) & \leavevmode\onslide<5->{$\{\alpha_i\}$, defined with respect to charged excitations}                                        \\
+   \end{tabularx}
 \end{frame}
 
 \begin{frame}{Koopmans functionals: results for molecules}
@@ -727,10 +813,10 @@
 
       \vspace{1ex}
       \begin{tabular}{c S[table-format = 2.2] S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] S[table-format = 2.2]}
-                          & {PBE} & {G\textsubscript{0}W\textsubscript{0}} & {KI} & {KIPZ} & {QSG$\tilde{\mathrm{W}}$} \\
+                          & {PBE} & {G\textsubscript{0}W\textsubscript{0}} & {KI} & {KIPZ} & {QSG$\tilde{\mathsf{W}}$} \\
          \midrule
          \midrule
-         $E_\mathrm{gap}$ & 2.54  & 0.56                                   & 0.27 & 0.22   & 0.18                      \\
+         $E_\mathsf{gap}$ & 2.54  & 0.56                                   & 0.27 & 0.22   & 0.18                      \\
          %                                  & {MAPE (\%)} & 48.28 & 12.10      & 7.0           \\
          \midrule
          IP               & 1.09  & 0.39                                   & 0.19 & 0.21   & 0.49                      \\
@@ -757,7 +843,7 @@
       %    \begin{tabularx}{\columnwidth}{C C C C C C C}
       %       ZnO                                  & LDA  & HSE  & GW$_0$ & scG$\tilde{\rm W}$ & KI   & exp.      \\
       %       \hline
-      %       $E_\mathrm{gap}$ (eV)                & 0.79 & 2.79 & 3.0    & 3.2                & 3.62 & 3.60      \\
+      %       $E_\mathsf{gap}$ (eV)                & 0.79 & 2.79 & 3.0    & 3.2                & 3.62 & 3.60      \\
       %       $\langle \varepsilon_d \rangle$ (eV) & -5.1 & -6.1 & -6.4   & -6.7               & -6.9 & -7.5/-8.0 \\
       %    \end{tabularx}
       % \end{subfigure}
@@ -768,9 +854,9 @@
                                &                                  & {PBE} & {QSG$\tilde{\mathsf{W}}$} & {KI} & {pKIPZ} & {\bf KIPZ} & {exp} \\
          \midrule
          \midrule
-         {Si}                  & $E_\mathrm{gap}$                 & 0.55  & 1.24                      & 1.18 & 1.17    & 1.19       & 1.17  \\
+         {Si}                  & $E_\mathsf{gap}$                 & 0.55  & 1.24                      & 1.18 & 1.17    & 1.19       & 1.17  \\
          \midrule
-         \multirow{2}{*}{GaAs} & $E_\mathrm{gap}$                 & 0.50  & 1.61                      & 1.53 & 1.49    & 1.50       & 1.52  \\
+         \multirow{2}{*}{GaAs} & $E_\mathsf{gap}$                 & 0.50  & 1.61                      & 1.53 & 1.49    & 1.50       & 1.52  \\
                                & $\langle \varepsilon_d \rangle $ & 14.9  & 17.6                      & 16.9 &         & 17.7       & 18.9
       \end{tabular}
    \end{center}
@@ -797,7 +883,7 @@
          \begin{tabular}{c S[table-format = 2.2] S[table-format = 2.2] S[table-format = 2.2] S[table-format = 2.2] >{\color{seaborn_red}\bfseries}S[table-format = 2.2] S[table-format = 2.2]}
             ZnO                                  & {LDA} & {HSE} & {GW$_0$} & {scG$\tilde{\rm W}$} & {KI} & {exp}       \\
             \hline
-            $E_\mathrm{gap}$ (eV)                & 0.79  & 2.79  & 3.0      & 3.2                  & 3.62 & 3.60        \\
+            $E_\mathsf{gap}$ (eV)                & 0.79  & 2.79  & 3.0      & 3.2                  & 3.62 & 3.60        \\
             $\langle \varepsilon_d \rangle$ (eV) & -5.1  & -6.1  & -6.4     & -6.7                 & -6.9 & {-7.5/-8.0} \\
          \end{tabular}
          %        \caption{table}
@@ -813,9 +899,13 @@
    \blfootcite{Colonna2022}
 \end{frame}
 
-\begin{frame}{How can we make these calculations easier?}
+\begin{frame}{How do I run these calculations?}
 
    \texttt{kcw.x} (DFPT implementation) is distributed in Quantum ESPRESSO v7.1 onwards
+
+   \vspace{2ex}
+
+   \texttt{kcp.x} (supercell implementation) is available publically
 
    \vspace{4ex}
 
@@ -848,10 +938,10 @@
                      \item start-to-finish Koopmans calculations
                      \item Wannierisation
                      \item dielectric tensor
-                     \item convergence tests
                      \item ...
                   \end{itemize}
             \item built on top of ASE\footnotemark[2]
+            \item under the hood, calls \texttt{Quantum ESPRESSO}
             \item does not require expert knowledge
          \end{itemize}
       \end{column}
@@ -908,19 +998,32 @@
    \begin{itemize}
       \item Koopmans functionals are a class of functionals that treat spectral properties on the same footing as total energy differences (via GPWL)
       \item they can give orbital energies and band structures with comparable accuracy to state-of-the-art GW
-      \item the release of \texttt{koopmans} means you don't need expert knowledge to run Koopmans functional calculations
+      \item Koopmans functionals are implemented in \texttt{Quantum ESPRESSO}, and we can use \texttt{koopmans} to run these calculations easily
    \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Acknowledgements}
+
+   \begin{center}
+      Coming up: a tutorial on Koopmans functionals
+      \vspace{1em}
+
+      But first: Yannick will talk about predicting screening parameters with ML
+
+      \vspace{1em}
+      Follow \includegraphics[height=\fontcharht\font`\B]{figures/Twitter_Bird.png} \textcolor{twitter_blue}{@ed\_linscott} for updates | Slides available at \includegraphics[height=\fontcharht\font`\B]{logos/github-favicon.png} github/elinscott
+   \end{center}
+
+   \vspace{1ex}
+
    \begin{center}
       \footnotesize
-      \begin{tabularx}{\textwidth}{CCCC}
-         \includegraphics[height = 0.3\paperheight]{figures/nicola_marzari.jpg}     &
-         \includegraphics[height = 0.3\paperheight]{figures/nicola_colonna2.png}    &
-         \includegraphics[height = 0.3\paperheight]{figures/riccardo_degennaro.jpg} &
-         \includegraphics[height = 0.3\paperheight]{figures/yannick_schubert.jpg}     \\
+      \begin{tabularx}{0.7\textwidth}{CCCC}
+         \includegraphics[height = 0.2\paperheight]{figures/nicola_marzari.jpg}     &
+         \includegraphics[height = 0.2\paperheight]{figures/nicola_colonna2.png}    &
+         \includegraphics[height = 0.2\paperheight]{figures/riccardo_degennaro.jpg} &
+         \includegraphics[height = 0.2\paperheight]{figures/yannick_schubert.jpg}     \\
          % \includegraphics[height = 0.2\paperheight]{figures/daniel_cole.jpeg}       &
          % \includegraphics[height = 0.2\paperheight]{figures/mike_payne.jpeg}        &
          % \includegraphics[height = 0.2\paperheight]{figures/david_oregan.jpg}         \\
@@ -931,18 +1034,9 @@
       \end{tabularx}
    \end{center}
    \begin{center}
-      \includegraphics[height = 0.15\paperheight]{logos/SNF_logo_standard_print_color_pos_e.eps}
+      \includegraphics[height = 0.125\paperheight]{logos/SNF_logo_standard_print_color_pos_e.eps}
       \hspace{1em}
-      \includegraphics[height = 0.15\paperheight]{figures/marvel_trimmed.png}
-   \end{center}
-
-   \begin{center}
-      \vspace{1em}
-      \small
-      Want to find out more? Go to \url{koopmans-functionals.org}
-      \vspace{1em}
-
-      Follow \includegraphics[height=\fontcharht\font`\B]{figures/Twitter_Bird.png} \textcolor{twitter_blue}{@ed\_linscott} for updates | Slides available at \includegraphics[height=\fontcharht\font`\B]{logos/github-favicon.png} github/elinscott
+      \includegraphics[height = 0.125\paperheight]{figures/marvel_trimmed.png}
    \end{center}
 
    % \begin{multicols}{2}
@@ -1026,7 +1120,7 @@
    \blfootcite{Schubert2022}
 
    \begin{align*}
-      c^i_{nlm,k=\mathrm{orbital}} & =\int d\textbf{r} g_{nl}(r)Y_{lm}(\theta,\varphi)\rho^i(\textbf{r}-\textbf{R}^i)                        \\
+      c^i_{nlm,k=\mathsf{orbital}} & =\int d\textbf{r} g_{nl}(r)Y_{lm}(\theta,\varphi)\rho^i(\textbf{r}-\textbf{R}^i)                        \\
       p^i_{n_1n_2l,k_1k_2}         & =\pi \sqrt{\frac{8}{2l+1}}\sum\limits_m {c_{n_1lm,k_1}^{i *}}c_{n_2lm,k_2}^i \label{eq: power spectrum}
    \end{align*}
 
