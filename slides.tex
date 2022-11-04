@@ -566,7 +566,7 @@
 
    \begin{itemize}
       \item<2-> the base functional $\rightarrow$ ``KI" (Koopmans integral). Does not affect density!
-      \item<3-> with a PZ correction $\rightarrow$ KIPZ
+      \item<3-> with a PZ correction $\rightarrow$ ``KIPZ"
    \end{itemize}
 
    \onslide<4->{You might also see\dots}
@@ -612,29 +612,42 @@
 \end{frame}
 
 \begin{frame}{Orbital-density-dependence}
-   Solve with CG minimisation (outer and inner loop)\footcite{Borghi2015}
+   Solve with CG minimisation:
+   \begin{description}[<+(1)->]
+      \item[outer loop:] $\psi^{(n+1)}_i = \psi_i^{(n)} + \Delta_i$
+      \item[inner loop:] $\psi^{(n+1)}_i = \sum_{j}U_{ij}\psi_j^{(n)}$
+   \end{description}
+   \setbeamercolor*{bibliography entry title}{fg=black}
+   \setbeamercolor*{bibliography entry author}{fg=black}
+   \setbeamercolor*{bibliography entry location}{fg=black}
+   \setbeamercolor*{bibliography entry note}{fg=black}
+   \onslide<4->{For more details see \cite{Borghi2015}}
+   \setbeamercolor*{bibliography entry title}{fg=seaborn_bg_grey_darker}
+   \setbeamercolor*{bibliography entry author}{fg=seaborn_bg_grey_darker}
+   \setbeamercolor*{bibliography entry location}{fg=seaborn_bg_grey_darker}
+   \setbeamercolor*{bibliography entry note}{fg=seaborn_bg_grey_darker}
    \vspace{1ex}
 
-   \onslide<2->{
+   \onslide<5->{
       Gives rise to a set of minimising orbitals (localised/variational)
       \vspace{1ex}
    }
 
-   \onslide<3->{
+   \onslide<6->{
       Diagonalising at the minimum gives rise to diagonalising orbitals (delocalised/canonical)
       \vspace{1ex}
    }
 
    \begin{figure}[t]
       \centering
-      \onslide<2->{
+      \onslide<5->{
          \begin{subfigure}{0.4\textwidth}
             \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_variational_orbital.png}
             \caption{variational}
          \end{subfigure}
       }
       \hspace{0.05\textwidth}
-      \onslide<3->{
+      \onslide<6->{
          \begin{subfigure}{0.4\textwidth}
             \includegraphics[height=\columnwidth,angle=90]{figures/fig_nguyen_canonical_orbital.png}
             \caption{canonical}
@@ -678,8 +691,8 @@
    }
 \end{frame}
 
-\begin{frame}{Koopmans functionals: theory}
-   Discuss here other consequences of ODD:
+\begin{frame}{Orbital-density-dependence}
+   Other features of orbital-density-dependence
    \begin{itemize}[<+->]
       \item ODD functional means that we know $\hat H \ket{\varphi_i}$ for variational orbitals $\{\ket{\varphi_i}\}$ but we don't know $\hat H$ in general
       \item Practically we can often use MLWFs
@@ -689,6 +702,10 @@
 \end{frame}
 
 \begin{frame}{Screening}
+
+   \begin{equation*}
+      \left.\frac{dE^\mathsf{Koopmans}}{df_i}\right|_{f_i = s} = \braopket{\varphi_i}{\hat h^\mathsf{DFT} + \alpha_i \hat v^\mathsf{Koopmans}}{\varphi_i} =
+   \end{equation*}
 
    Discuss here screening, how to determine these ab initio
 
