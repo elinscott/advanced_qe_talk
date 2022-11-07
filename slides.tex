@@ -91,7 +91,7 @@
 \usepackage{tabularx}
 % Tikz
 \usepackage{tikz}
-\usetikzlibrary{positioning,shapes,arrows,backgrounds,fit,calc,external,trees}
+\usetikzlibrary{positioning,shapes,arrows,backgrounds,fit,calc,external,trees,tikzmark}
 % \tikzexternalize[prefix=tikzfigures/]
 \tikzstyle{dummy} = []
 \tikzstyle{line} = [draw, thick, -latex']
@@ -702,20 +702,85 @@
 \end{frame}
 
 \begin{frame}{Screening}
+   \begin{itemize}[<+->]
+      \item What is screening (in the context of Koopmans functionals)?
 
+            \begin{equation*}
+               \underbrace{
+                  \frac{d E}{d f_i}
+               }_{\substack{\text{including} \\ \text{relaxation}}}
+               \approx
+               \alpha_i
+               \underbrace{\frac{\partial E}{\partial f_i}
+               }_{\substack{\text{excluding} \\ \text{relaxation}}}
+            \end{equation*}
+      \item we see this in Hartree-Fock (the original ``Koopmans' theorem''):
+            \begin{equation*}
+               E^{HF}_{ee} = \frac{1}{2}\sum_{ij} f_i f_j \int d\mathbf{r} d\mathbf{r}' \frac{|\psi_i(\mathbf{r})|^2|\psi_j(\mathbf{r'})|^2}{\mathbf{r} - \mathbf{r}'} - \frac{\psi_i^*(\mathbf{r})\psi_j^*(\mathbf{r'})\psi_i(\mathbf{r'})\psi_j(\mathbf{r})}{\mathbf{r} - \mathbf{r}'}
+            \end{equation*}
+            \blfootcite{Li2017}
+      \item How to choose an appropriate value for $\alpha_i$? Return to the original idea of Koopmans functionals:
+            \begin{equation*}
+               \varepsilon_i^\mathsf{Koopmans} = E_i(N-1) - E(N)
+            \end{equation*}
+   \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Screening}
+
+   \begin{overlayarea}{\textwidth}{0.65\textheight}
+      \begin{center}
+         \only<1>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_0.pdf}}
+         \only<2>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_1.pdf}}
+         \only<3>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_2.pdf}}
+         \only<4>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_3.pdf}}
+         \only<5->{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_4.pdf}}
+      \end{center}
+
+   \end{overlayarea}
+
+   \begin{overlayarea}{\textwidth}{0.3\textheight}
+      \only<3-5>{
+         \begin{equation*}
+            \lambda_{ii}(\alpha) \equiv
+            \braopket{\varphi_i}{\hat h^\mathsf{DFT} + \alpha_i \hat v^\mathsf{Koopmans}}{\varphi_i}
+            =
+            \left.\frac{dE^\mathsf{Koopmans}}{df_i}\right|_{f_i = s}
+         \end{equation*}
+      }
+      \only<6->{Given this, how to work out the ideal $\alpha$?}
+      \only<7->{
+         \begin{equation*}
+            \alpha^{n+1} = \alpha^{n} \frac{E_i(N-1) - E(N) - \lambda_{ii}(0)}{\lambda_{ii}(\alpha^{n}) - \lambda_{ii}(0)}
+         \end{equation*}
+      }
+   \end{overlayarea}
+\end{frame}
+
+\begin{frame}{Screening}
    \begin{equation*}
-      \left.\frac{dE^\mathsf{Koopmans}}{df_i}\right|_{f_i = s} = \braopket{\varphi_i}{\hat h^\mathsf{DFT} + \alpha_i \hat v^\mathsf{Koopmans}}{\varphi_i} =
+      \alpha^{n+1} = \tikzmarknode{alpha}{\alpha^{n}} \frac{\tikzmarknode{enm1}{E_i(N-1)} - \tikzmarknode{en}{E(N)} - \lambda_{ii}(0)}{\tikzmarknode{lambdaa}{\lambda_{ii}(\alpha^{n})} - \tikzmarknode{lambda0}{\lambda_{ii}(0)}}
    \end{equation*}
-
-   Discuss here screening, how to determine these ab initio
-
-   \begin{equation*}
-      \frac{d E}{d f_i}
-      \approx
-      \alpha_i \frac{\partial E}{\partial f_i}
+   \begin{tikzpicture}[overlay,remember picture,seaborn_red,>=stealth,shorten
+         <=0.2ex,nodes={font=\footnotesize,align=left,inner ysep=1pt},<-]
       \onslide<2->{
-         \Rightarrow \varepsilon_i^\mathsf{Koopmans} = \frac{\partial E_\mathsf{Koopmans}}{\partial f_i}  \approx E_i(N-1) - E(N)}
-   \end{equation*}
+         \draw (lambdaa.south) -- ++ (0,-4em) node[anchor=north,align=center]
+         (lambdaatext) {expectation value \\ of $\hat{H}^\mathsf{Koopmans}$};
+      }
+      \onslide<3->{
+         \draw (lambda0.south) -- ++ (0,-1.5em) node[anchor=north,align=center]
+         (lambda0text) {expectation value \\ of $\hat{H}^\mathsf{DFT}$};
+      }
+      \onslide<4->{
+         \draw (en.north) -- ++ (0,1.5em) node[anchor=south,align=center]
+         (entext) {total energy \\ of neutral system};
+      }
+      \onslide<5->{
+         \draw (enm1.north) -- ++ (0,4em) node[anchor=south,align=center]
+         (enm1text) {total energy with electron \\ removed from orbital $i$};
+      }
+   \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{Screening}
@@ -1108,61 +1173,61 @@
 %    % For further reading on Koopmans functionals, see \cite{Dabo2010,Borghi2014,Nguyen2018,Colonna2018,Colonna2019,DeGennaro2022,Colonna2022}
 % 
 % \end{frame}
-\begin{frame}{Learning the screening parameters}
-   \begin{center}
-      \begin{tikzpicture}
-         \node[inner sep=0pt] (water box) at (0,0)
-         {
-            \includegraphics[width=0.25\textwidth]{figures/orbital.emp.00191_cropped.png}
-         };
-         \node[below=0cm of water box] (density) {$\rho_i(\mathbf{r})$};
-         \node[right=0.2\textwidth of water box] (power spectrum) {
-            $
-               \begin{bmatrix}
-                  x_{0} \\
-                  x_{1} \\
-                  x_{2} \\
-                  \vdots
-               \end{bmatrix}
-            $
-         };
-         \path[line] (water box) -- node [midway, above, align=center] (decomposition) {power spectrum \\ decomposition} (power spectrum);
-         \node[right=0.2\textwidth of power spectrum] (screening parameter) {$\alpha_i$};
-         \path[line] (power spectrum) -- node [midway, above, align=center] (model) {ML model} (screening parameter);
-      \end{tikzpicture}
-   \end{center}
-
-   \vspace{-4em}
-
-   \blfootcite{Schubert2022}
-
-   \begin{align*}
-      c^i_{nlm,k=\mathsf{orbital}} & =\int d\textbf{r} g_{nl}(r)Y_{lm}(\theta,\varphi)\rho^i(\textbf{r}-\textbf{R}^i)                        \\
-      p^i_{n_1n_2l,k_1k_2}         & =\pi \sqrt{\frac{8}{2l+1}}\sum\limits_m {c_{n_1lm,k_1}^{i *}}c_{n_2lm,k_2}^i \label{eq: power spectrum}
-   \end{align*}
-
-   % $g_{nl}$ = orthonormalised radial Gaussian basis functions
-
-   % $Y_{lm}$ = spherical harmonics
-
-\end{frame}
-
-\begin{frame}{Learning the screening parameters}
-   \begin{center}
-
-      \includegraphics[height=0.7\paperheight]{figures/CsSnI3_calc_vs_pred_Edward.png}
-      \includegraphics[height=0.7\paperheight]{figures/convergence_analysis_Edward.png}
-
-      loss of accuracy of the band gap of $\sim$ 0.02 eV
-
-      (cf. when calculating screening parameters \emph{ab initio})
-
-      speedup of 70$\times$
-   \end{center}
-
-   \blfootcite{Schubert2022}
-
-\end{frame}
+% \begin{frame}{Learning the screening parameters}
+%    \begin{center}
+%       \begin{tikzpicture}
+%          \node[inner sep=0pt] (water box) at (0,0)
+%          {
+%             \includegraphics[width=0.25\textwidth]{figures/orbital.emp.00191_cropped.png}
+%          };
+%          \node[below=0cm of water box] (density) {$\rho_i(\mathbf{r})$};
+%          \node[right=0.2\textwidth of water box] (power spectrum) {
+%             $
+%                \begin{bmatrix}
+%                   x_{0} \\
+%                   x_{1} \\
+%                   x_{2} \\
+%                   \vdots
+%                \end{bmatrix}
+%             $
+%          };
+%          \path[line] (water box) -- node [midway, above, align=center] (decomposition) {power spectrum \\ decomposition} (power spectrum);
+%          \node[right=0.2\textwidth of power spectrum] (screening parameter) {$\alpha_i$};
+%          \path[line] (power spectrum) -- node [midway, above, align=center] (model) {ML model} (screening parameter);
+%       \end{tikzpicture}
+%    \end{center}
+% 
+%    \vspace{-4em}
+% 
+%    \blfootcite{Schubert2022}
+% 
+%    \begin{align*}
+%       c^i_{nlm,k=\mathsf{orbital}} & =\int d\textbf{r} g_{nl}(r)Y_{lm}(\theta,\varphi)\rho^i(\textbf{r}-\textbf{R}^i)                        \\
+%       p^i_{n_1n_2l,k_1k_2}         & =\pi \sqrt{\frac{8}{2l+1}}\sum\limits_m {c_{n_1lm,k_1}^{i *}}c_{n_2lm,k_2}^i \label{eq: power spectrum}
+%    \end{align*}
+% 
+%    % $g_{nl}$ = orthonormalised radial Gaussian basis functions
+% 
+%    % $Y_{lm}$ = spherical harmonics
+% 
+% \end{frame}
+% 
+% \begin{frame}{Learning the screening parameters}
+%    \begin{center}
+% 
+%       \includegraphics[height=0.7\paperheight]{figures/CsSnI3_calc_vs_pred_Edward.png}
+%       \includegraphics[height=0.7\paperheight]{figures/convergence_analysis_Edward.png}
+% 
+%       loss of accuracy of the band gap of $\sim$ 0.02 eV
+% 
+%       (cf. when calculating screening parameters \emph{ab initio})
+% 
+%       speedup of 70$\times$
+%    \end{center}
+% 
+%    \blfootcite{Schubert2022}
+% 
+% \end{frame}
 
 
 \backupend
