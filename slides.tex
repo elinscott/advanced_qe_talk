@@ -365,13 +365,12 @@
 
 \begin{frame}{Outline}
 
-   What are Koopmans functionals?
-
-   How do they differ from standard DFT?
-
-   What implications does this have for running these calculations?
-
-   What codes do we use to run these calculations?
+   \begin{itemize}
+      \item What are Koopmans functionals?
+      \item How do they differ from standard DFT?
+      \item What implications does this have for running these calculations?
+      \item What codes do we use to run these calculations?
+   \end{itemize}
 
 \end{frame}
 
@@ -436,7 +435,7 @@
       \begin{minipage}{0.45\textwidth}
          \centering
          \only<1>{
-            \includegraphics[height=0.7\textheight]{figures/golze_pes.jpg}
+            \includegraphics[height=0.5\textheight]{figures/golze_pes.jpg}
             % \includegraphics[height=0.7\textheight]{figures/photoemission_costantini.png}
          }
          \only<2>{
@@ -459,13 +458,13 @@
       % \Pi_i =
       -
       \underbrace{
-         \only<3>{\textcolor{red}}{\int^{f_i}_{0} \varepsilon_i(f) df}
+         \only<3>{\textcolor{seaborn_red}}{\int^{f_i}_{0} \varepsilon_i(f) df}
       }_{
          \substack{\text{removes}  \\ \text{curvature}}
       }
       +
       \underbrace{
-         \only<4>{\textcolor{red}}{f_i \int_0^1 \varepsilon_i(f) df}
+         \only<4>{\textcolor{seaborn_red}}{f_i \eta_i\vphantom{\int}}
       }_{
          \substack{\text{restores} \\ \text{linearity}}
       }
@@ -499,10 +498,10 @@
 \begin{frame}{Core theory}
 
    \begin{align*}
-      E_\mathsf{Koopmans}[\rho,\only<4>{\textcolor{red}}{\{f_i\}}, \only<5>{\textcolor{red}}{\{\alpha_i\}}]
+      E_\mathsf{Koopmans}[\rho,\only<4>{\textcolor{seaborn_red}}{\{f_i\}}, \only<5>{\textcolor{seaborn_red}}{\{\alpha_i\}}]
       = {E_{DFT}[\rho]}
       + \sum_i
-      \only<5>{\textcolor{red}}
+      \only<5>{\textcolor{seaborn_red}}
       {\alpha_i}
       \Biggl(
       -
@@ -513,7 +512,7 @@
       }
       +
       \underbrace{
-         {f_i \int_0^1 \varepsilon_i(f) df}
+         {f_i \only<3>{\textcolor{seaborn_red}}{\eta_i}\vphantom{\int}}
       }_{
          \substack{\text{restores} \\ \text{linearity}}
       }
@@ -541,31 +540,31 @@
 \begin{frame}{Flavours of Koopmans functionals}
 
    \begin{align*}
-      E_\mathsf{Koopmans}[\rho,\only<3>{\textcolor{red}}{\{f_i\}}, \only<4>{\textcolor{red}}{\{\alpha_i\}}]
+      E
+      \only<1>{_{\mathsf{Koopmans}}}
+      \only<2>{_{\textcolor{seaborn_red}{\mathsf{KI}}}}
+      \only<3->{_{\textcolor{seaborn_red}{\mathsf{KIPZ}}}}
+      [\rho,{\{f_i\}}, {\{\alpha_i\}}]
       = {E_{DFT}[\rho]}
       + \sum_i
-      \only<4>{\textcolor{red}}
       {\alpha_i}
       \Biggl(
       -
-      \underbrace{
-         {\int^{f_i}_{0} \varepsilon_i(f) df}
-      }_{
-         \substack{\text{removes}  \\ \text{curvature}}
-      }
+      {\int^{f_i}_{0} \varepsilon_i(f) df}
       +
-      \underbrace{
-         {f_i \int_0^1 \varepsilon_i(f) df}
-      }_{
-         \substack{\text{restores} \\ \text{linearity}}
-      }
+      {f_i}
+      \only<1>{\eta_i}
+      \only<3->{\Biggl\{}
+      \only<2->{\int_0^1 \varepsilon_i(f) df}
+      \only<3->{-E_{Hxc}[n_i]}
+      \only<3->{\Biggr\}}
       \Biggr)
    \end{align*}
 
    One degree of freedom: what should be the gradient of this linear term?
 
    \begin{itemize}
-      \item<2-> the base functional $\rightarrow$ ``KI" (Koopmans integral). Does not affect density!
+      \item<2-> the base functional $\rightarrow$ ``KI" (Koopmans integral). Enforces IP theorem. Does not affect energy/density!
       \item<3-> with a PZ correction $\rightarrow$ ``KIPZ"
    \end{itemize}
 
@@ -601,12 +600,12 @@
       For filled orbitals with KI:
 
       \begin{equation*}
-         v^\mathsf{KI}_{\textcolor{red}{i}}/\alpha_i = - E_{\mathsf{H}}\left[\textcolor{red}{n_{i}}\right]
+         v^\mathsf{KI}_{{i}}/\alpha_i = - E_{\mathsf{H}}\left[{n_{i}}\right]
          + E_{\mathsf{xc}}\left[\rho\right]
-         - E_{\mathsf{xc}}\left[\rho-\textcolor{red}{n_{i}}\right]
+         - E_{\mathsf{xc}}\left[\rho-{n_{i}}\right]
          - \int d\mathbf{r'}
          v_\mathsf{xc}(\mathbf{r}', [\rho])
-         \textcolor{red}{n_{i}}(\mathbf{r}')
+         {n_{i}}(\mathbf{r}')
       \end{equation*}
    }
 \end{frame}
@@ -614,8 +613,8 @@
 \begin{frame}{Orbital-density-dependence}
    Solve with CG minimisation:
    \begin{description}[<+(1)->]
-      \item[outer loop:] $\psi^{(n+1)}_i = \psi_i^{(n)} + \Delta_i$
-      \item[inner loop:] $\psi^{(n+1)}_i = \sum_{j}U_{ij}\psi_j^{(n)}$
+      \item[outer loop:] $\varphi^{(n+1)}_i = \varphi_i^{(n)} + \Delta_i$
+      \item[inner loop:] $\varphi^{(n+1)}_i = \sum_{j}U_{ij}\varphi_j^{(n)}$
    \end{description}
    \setbeamercolor*{bibliography entry title}{fg=black}
    \setbeamercolor*{bibliography entry author}{fg=black}
@@ -666,29 +665,30 @@
 
    \vspace{-2ex}
 
-   \only<2-3>{
-      In the bulk limit for one cell $\Delta E = E(N-\delta) - E(N)$
-   }
+   \begin{overlayarea}{\textwidth}{0.25\textheight}
+      \only<2-3>{
+         In the bulk limit for one cell $\Delta E = E(N-\delta N) - E(N)$
+      }%
 
-   \only<3>{
-      Across all the cells $
-         \Delta E = \frac{1}{\delta N}\left(E(N-\delta N) - E(N)\right) = -\frac{dE}{dN} = -\varepsilon_\mathsf{HO}$
-   }
-
-   \only<4->{
-      \begin{equation*}
-         \lim_{n_i(r) \rightarrow 0}
-         v^\mathsf{KI}_{{i}}/\alpha_i =
-         \lim_{n_i(r) \rightarrow 0}
-         - E_{\mathsf{H}}\left[{n_{i}}\right]
-         + E_{\mathsf{xc}}\left[\rho\right]
-         - E_{\mathsf{xc}}\left[\rho-{n_{i}}\right]
-         - \int d\mathbf{r'}
-         v_\mathsf{xc}(\mathbf{r}', [\rho])
-         {n_{i}}(\mathbf{r}')
-         = 0
-      \end{equation*}
-   }
+      \only<3>{
+         Across all the cells $
+            \Delta E = \frac{1}{\delta N}\left(E(N-\delta N) - E(N)\right) = -\frac{dE}{dN} = -\varepsilon_\mathsf{HO}$
+      }%
+      \only<4->{
+         \begin{equation*}
+            \lim_{n_i(r) \rightarrow 0}
+            v^\mathsf{KI}_{{i}}/\alpha_i =
+            \lim_{n_i(r) \rightarrow 0}
+            - E_{\mathsf{H}}\left[{n_{i}}\right]
+            + E_{\mathsf{xc}}\left[\rho\right]
+            - E_{\mathsf{xc}}\left[\rho-{n_{i}}\right]
+            - \int d\mathbf{r'}
+            v_\mathsf{xc}(\mathbf{r}', [\rho])
+            {n_{i}}(\mathbf{r}')
+            = 0
+         \end{equation*}
+      }%
+   \end{overlayarea}
 \end{frame}
 
 \begin{frame}{Orbital-density-dependence}
@@ -696,12 +696,13 @@
    \begin{itemize}[<+->]
       \item ODD functional means that we know $\hat H \ket{\varphi_i}$ for variational orbitals $\{\ket{\varphi_i}\}$ but we don't know $\hat H$ in general
       \item Practically we can often use MLWFs
-      \item a natural generalisation in the direction of spectral functional theory\footcite{Ferretti2014}
+      \item a natural generalisation in the direction of spectral functional theory (as discussed already by Andrea)\footcite{Ferretti2014}
    \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Screening}
+   \small
    \begin{itemize}[<+->]
       \item What is screening (in the context of Koopmans functionals)?
 
@@ -709,16 +710,24 @@
                \underbrace{
                   \frac{d E}{d f_i}
                }_{\substack{\text{including} \\ \text{relaxation}}}
-               \approx
-               \alpha_i
+               \xleftarrow{\qquad ? \qquad}
+               % \approx
+               % \alpha_i
                \underbrace{\frac{\partial E}{\partial f_i}
                }_{\substack{\text{excluding} \\ \text{relaxation}}}
             \end{equation*}
-      \item we see this in Hartree-Fock (the original ``Koopmans' theorem''):
+      \item In Hartree-Fock (the original ``Koopmans' theorem''):
             \begin{equation*}
                E^{HF}_{ee} = \frac{1}{2}\sum_{ij} f_i f_j \int d\mathbf{r} d\mathbf{r}' \frac{|\psi_i(\mathbf{r})|^2|\psi_j(\mathbf{r'})|^2}{\mathbf{r} - \mathbf{r}'} - \frac{\psi_i^*(\mathbf{r})\psi_j^*(\mathbf{r'})\psi_i(\mathbf{r'})\psi_j(\mathbf{r})}{\mathbf{r} - \mathbf{r}'}
             \end{equation*}
             \blfootcite{Li2017}
+      \item Account for screening post-hoc:
+            \begin{equation*}
+               \frac{d E}{d f_i}
+               \approx
+               \alpha_i
+               \frac{\partial E}{\partial f_i}
+            \end{equation*}
       \item How to choose an appropriate value for $\alpha_i$? Return to the original idea of Koopmans functionals:
             \begin{equation*}
                \varepsilon_i^\mathsf{Koopmans} = E_i(N-1) - E(N)
@@ -731,26 +740,26 @@
 
    \begin{overlayarea}{\textwidth}{0.65\textheight}
       \begin{center}
-         \only<1>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_0.pdf}}
-         \only<2>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_1.pdf}}
-         \only<3>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_2.pdf}}
-         \only<4>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_3.pdf}}
-         \only<5->{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_4.pdf}}
+         \only<1>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_0.pdf}}%
+         \only<2>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_1.pdf}}%
+         \only<3-4>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_2.pdf}}%
+         \only<5>{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_3.pdf}}%
+         \only<6->{\includegraphics[width=0.5\textwidth]{figures/alpha_calc/fig_alpha_calc_step_4.pdf}}%
       \end{center}
 
    \end{overlayarea}
 
    \begin{overlayarea}{\textwidth}{0.3\textheight}
-      \only<3-5>{
+      \only<4-6>{
          \begin{equation*}
             \lambda_{ii}(\alpha) \equiv
-            \braopket{\varphi_i}{\hat h^\mathsf{DFT} + \alpha_i \hat v^\mathsf{Koopmans}}{\varphi_i}
+            \braopket{\varphi_i}{\hat h^\mathsf{DFT} + \alpha \hat v^\mathsf{Koopmans}}{\varphi_i}
             =
             \left.\frac{dE^\mathsf{Koopmans}}{df_i}\right|_{f_i = s}
          \end{equation*}
       }
-      \only<6->{Given this, how to work out the ideal $\alpha$?}
-      \only<7->{
+      \only<7->{Given this, how to work out the ideal $\alpha$?}
+      \only<8->{
          \begin{equation*}
             \alpha^{n+1} = \alpha^{n} \frac{E_i(N-1) - E(N) - \lambda_{ii}(0)}{\lambda_{ii}(\alpha^{n}) - \lambda_{ii}(0)}
          \end{equation*}
@@ -1088,18 +1097,6 @@
 \begin{frame}{Acknowledgements}
 
    \begin{center}
-      Coming up: a tutorial on Koopmans functionals
-      \vspace{1em}
-
-      But first: Yannick will talk about predicting screening parameters with ML
-
-      \vspace{1em}
-      Follow \includegraphics[height=\fontcharht\font`\B]{figures/Twitter_Bird.png} \textcolor{twitter_blue}{@ed\_linscott} for updates | Slides available at \includegraphics[height=\fontcharht\font`\B]{logos/github-favicon.png} github/elinscott
-   \end{center}
-
-   \vspace{1ex}
-
-   \begin{center}
       \footnotesize
       \begin{tabularx}{0.7\textwidth}{CCCC}
          \includegraphics[height = 0.2\paperheight]{figures/nicola_marzari.jpg}     &
@@ -1120,6 +1117,12 @@
       \hspace{1em}
       \includegraphics[height = 0.125\paperheight]{figures/marvel_trimmed.png}
    \end{center}
+
+   \vspace{1ex}
+   \begin{center}
+      Follow \includegraphics[height=\fontcharht\font`\B]{figures/Twitter_Bird.png} \textcolor{twitter_blue}{@ed\_linscott} for updates | Slides available at \includegraphics[height=\fontcharht\font`\B]{logos/github-favicon.png} github/elinscott
+   \end{center}
+
 
    % \begin{multicols}{2}
    %    \tiny

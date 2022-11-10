@@ -27,13 +27,14 @@ if __name__ == '__main__':
         # dy/dx = 2*a*x - 1 - a
         dydx = 2 * curvature * xgrid + (curvature - 1)
         dx = -0.3
+
         if step > 1:
+            ax.plot(xgrid, ygrid, ls='--')
+
+        if step > 2:
             dy = dydx[-1] * dx
             draw_arrow(ax, 0, 0, dx, dy)
             ax.text(dx / 2, dy / 2 - 0.05, '$\lambda_{ii}(0)$', va='top', ha='center', color='b')
-
-        if step > 2:
-            ax.plot(xgrid, ygrid, ls='--')
 
         if step > 3:
             # alpha
@@ -47,7 +48,7 @@ if __name__ == '__main__':
 
         # Datapoints
         ax.plot([-1], [1], 'ko')
-        ax.text(-1.05, 1.05, '$E(N-1)$', ha='right')
+        ax.text(-1.0, 1.1, '$E_i(N-1)$', ha='right')
         ax.text(0.05,  -0.05, '$E(N)$', ha='left')
         ax.plot([0], [0], 'ko')
 
@@ -59,6 +60,5 @@ if __name__ == '__main__':
         ax.set_ylabel('energy')
         ax.set_xticks([])
         ax.set_yticks([])
-        plt.tight_layout()
         sns.despine()
         plt.savefig(f'fig_alpha_calc_step_{step}.pdf', format='pdf')
